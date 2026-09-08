@@ -1,0 +1,24 @@
+{
+  "name": "three-game-forge",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": ["packages/*"],
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run build:packages && tsc --noEmit && vite build",
+    "build:packages": "tsc -p tsconfig.build.json",
+    "audit:consumers": "node scripts/audit-consumers.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/runtime.test.ts"
+  },
+  "dependencies": {
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.170.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.6"
+  }
+}

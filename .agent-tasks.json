@@ -1,0 +1,58 @@
+{
+  "project": "three-game-forge",
+  "tasks": [
+    {
+      "id": "bootstrap-runtime",
+      "title": "Bootstrap runtime playground and protocol documents",
+      "status": "complete",
+      "owner": "owner",
+      "dependencies": [],
+      "paths": ["src", "packages/runtime", "*.md", "docs/adr"]
+    },
+    {
+      "id": "runtime-services",
+      "title": "Extract clock, lifecycle, and diagnostics services",
+      "status": "complete",
+      "owner": "owner",
+      "dependencies": ["bootstrap-runtime"],
+      "paths": ["packages/runtime"]
+    },
+    {
+      "id": "browser-evidence",
+      "title": "Add deterministic browser hooks and evidence manifest",
+      "status": "complete",
+      "owner": "owner",
+      "dependencies": ["runtime-services"],
+      "paths": ["tests", "artifacts", "docs/verification"]
+    },
+    {
+      "id": "framework-foundations",
+      "title": "Implement reusable input, camera, world, assets, networking, UI, audio, renderer, and testkit packages",
+      "status": "complete",
+      "owner": "owner",
+      "dependencies": ["runtime-services"],
+      "paths": ["packages"]
+    },
+    {
+      "id": "consumer-contract-audit",
+      "title": "Verify Echoes and MRPG consumer contracts without modifying consumer repositories",
+      "status": "complete",
+      "owner": "owner",
+      "dependencies": ["framework-foundations"],
+      "paths": ["scripts/audit-consumers.mjs", "examples", "docs/research"]
+    },
+    {
+      "id": "live-consumer-integration",
+      "title": "Integrate one reversible adapter boundary in each live consumer repository",
+      "status": "in_progress",
+      "owner": "owner",
+      "dependencies": ["consumer-contract-audit"],
+      "paths": ["docs/integration", "docs/verification"],
+      "evidence": {
+        "mrpg": "agent/three-game-forge-mrpg-integration: V0, client V3, and isolated server-backed primary path passed",
+        "echoes": "agent/three-game-forge-echoes-integration: V0 build, server-backed primary path, destructive END TURN, invalid-resume error path, client V3, and bridge asset copy passed",
+        "remaining": "Owner review of isolated consumer branches before any merge; production checkouts remain untouched"
+      }
+    }
+  ]
+}

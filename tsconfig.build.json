@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "rootDir": "packages",
+    "outDir": "build/packages",
+    "rewriteRelativeImportExtensions": true
+  },
+  "include": ["packages"]
+}
