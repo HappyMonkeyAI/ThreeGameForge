@@ -10,6 +10,7 @@
     "build": "npm run build:packages && tsc --noEmit && vite build",
     "build:packages": "tsc -p tsconfig.build.json",
     "audit:consumers": "node scripts/audit-consumers.mjs",
+    "audit:consumers:strict": "node scripts/audit-consumers.mjs --strict",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/runtime.test.ts"
   },
