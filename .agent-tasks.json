@@ -53,6 +53,14 @@
         "echoes": "agent/three-game-forge-echoes-integration: V0 build, server-backed primary path, destructive END TURN, invalid-resume error path, client V3, and bridge asset copy passed",
         "remaining": "Owner review of isolated consumer branches before any merge; production checkouts remain untouched"
       }
+    },
+    {
+      "id": "public-release-readiness",
+      "title": "Prepare the private framework repository for an approved public GitHub release",
+      "status": "planned",
+      "owner": "owner",
+      "dependencies": ["live-consumer-integration"],
+      "paths": ["PLAN.md", "TASKS.md", "docs", ".github", "CONTRIBUTING.md", "SECURITY.md", "CODE_OF_CONDUCT.md"]
     }
   ]
 }

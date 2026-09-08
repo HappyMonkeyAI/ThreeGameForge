@@ -48,3 +48,20 @@
   stabilize; migrate consumers from local workspace links to semver ranges.
 - Treat local workspace links as an incubation mode, not the long-term
   distribution contract.
+
+## P7 — Public GitHub release readiness
+
+- Audit tracked files and Git history for internal hostnames, IP addresses,
+  absolute workstation paths, private repository details, credentials, and
+  unlicensed source or assets.
+- Replace internal research/verification notes with public-safe summaries or
+  move operational evidence out of the public repository.
+- Add `CONTRIBUTING.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, and GitHub issue/
+  pull-request templates.
+- Add GitHub Actions for install, typecheck, tests, build, consumer audit, and
+  diff hygiene.
+- Complete a public-repository review, then change GitHub visibility from
+  private to public only after explicit owner approval.
+- Track npm package publication separately: remove package privacy flags only
+  when compiled exports, package manifests, tarball smoke tests, semver policy,
+  and registry release credentials are ready.
