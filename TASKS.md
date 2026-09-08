@@ -70,8 +70,8 @@
 
 ## Public GitHub release readiness
 
-- [ ] Audit tracked files and history for internal paths, network details, private repository references, secrets, and license gaps.
-- [ ] Convert internal research and verification notes into public-safe documentation.
+- [x] Audit tracked files and history for internal paths, network details, private repository references, secrets, and license gaps.
+- [x] Convert internal research and verification notes into public-safe documentation.
 - [ ] Add `CONTRIBUTING.md`, `SECURITY.md`, and `CODE_OF_CONDUCT.md`.
 - [ ] Add GitHub issue and pull-request templates.
 - [ ] Add GitHub Actions for install, typecheck, tests, build, consumer audit, and diff hygiene.

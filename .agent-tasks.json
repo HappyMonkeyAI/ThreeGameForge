@@ -62,8 +62,8 @@
       "dependencies": ["live-consumer-integration"],
       "paths": ["PLAN.md", "TASKS.md", "docs", ".github", "CONTRIBUTING.md", "SECURITY.md", "CODE_OF_CONDUCT.md"],
       "evidence": {
-        "implemented": "Governance files, issue/PR templates, CI workflow, public-safe current docs, and optional consumer audit",
-        "remaining": "Historical internal-reference scrub, final public review, and explicit visibility approval"
+        "implemented": "Governance files, issue/PR templates, CI workflow, public-safe docs, optional consumer audit, and sanitized master history",
+        "remaining": "Final public-repository review and explicit visibility approval"
       }
     }
   ]
