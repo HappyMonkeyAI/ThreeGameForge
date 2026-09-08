@@ -57,10 +57,14 @@
     {
       "id": "public-release-readiness",
       "title": "Prepare the private framework repository for an approved public GitHub release",
-      "status": "planned",
+      "status": "in_progress",
       "owner": "owner",
       "dependencies": ["live-consumer-integration"],
-      "paths": ["PLAN.md", "TASKS.md", "docs", ".github", "CONTRIBUTING.md", "SECURITY.md", "CODE_OF_CONDUCT.md"]
+      "paths": ["PLAN.md", "TASKS.md", "docs", ".github", "CONTRIBUTING.md", "SECURITY.md", "CODE_OF_CONDUCT.md"],
+      "evidence": {
+        "implemented": "Governance files, issue/PR templates, CI workflow, public-safe current docs, and optional consumer audit",
+        "remaining": "Historical internal-reference scrub, final public review, and explicit visibility approval"
+      }
     }
   ]
 }

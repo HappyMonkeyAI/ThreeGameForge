@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const root = resolve(process.cwd(), '..', '..');
+const strict = process.argv.includes('--strict');
 const consumers = {
   echoes: resolve(root, 'EchoesOfAion'),
   mrpg: resolve(root, 'MRPGRealms'),
@@ -17,7 +18,13 @@ const checks = [
 ];
 
 let failures = 0;
+let skipped = 0;
 for (const [consumer, relativePath, required] of checks) {
+  if (!existsSync(consumers[consumer])) {
+    skipped += 1;
+    console.log(`SKIP ${consumer}: consumer checkout is not present (use --strict to require it)`);
+    continue;
+  }
   const file = resolve(consumers[consumer], relativePath);
   const content = existsSync(file) ? readFileSync(file, 'utf8') : '';
   const missing = required.filter((term) => !content.toLowerCase().includes(term.toLowerCase()));
@@ -29,4 +36,4 @@ for (const [consumer, relativePath, required] of checks) {
   }
 }
 
-if (failures > 0) process.exitCode = 1;
+if (failures > 0 || (strict && skipped > 0)) process.exitCode = 1;

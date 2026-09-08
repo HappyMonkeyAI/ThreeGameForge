@@ -27,3 +27,13 @@ npm run audit:consumers
 - `TASKS.md` — active task ledger
 
 The project follows the HappyMonkeyAI AgentsProtocol conventions while retaining explicit human approval for destructive Git operations and commits.
+
+## Contributing and release status
+
+This repository is in framework incubation. See [CONTRIBUTING.md](CONTRIBUTING.md)
+for local verification, [WORKSPACE.md](WORKSPACE.md) for the temporary consumer
+layout, and [SECURITY.md](SECURITY.md) for vulnerability reporting. The MIT
+license is in [LICENSE](LICENSE).
+
+The framework packages are not published to a registry yet; package-release
+work is tracked separately from public GitHub source-release readiness.

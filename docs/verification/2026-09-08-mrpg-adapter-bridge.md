@@ -2,9 +2,7 @@
 
 ## Scope
 
-Isolated consumer worktree:
-
-`MRPG Realms integration worktree`
+Isolated MRPG integration worktree.
 
 Branch: `agent/three-game-forge-mrpg-integration`
 

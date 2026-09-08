@@ -14,7 +14,9 @@
 
 ## Remote source
 
-The intended SSH source is `private LAN reference vault` on `private LAN host`. Read-only access was verified on 2026-09-08 with `REMOTE_OK` and `VAULT_OK`.
+The intended remote source was a private LAN reference vault containing
+Three.js materials. Read-only access was verified on 2026-09-08. The vault is
+research input only and is not a runtime dependency.
 
 | Remote source | Evidence observed | Disposition |
 |---|---|---|

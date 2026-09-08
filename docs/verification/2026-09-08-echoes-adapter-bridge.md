@@ -2,9 +2,7 @@
 
 ## Scope
 
-Isolated consumer worktree:
-
-`Echoes of Aion integration worktree`
+Isolated Echoes integration worktree.
 
 Branch: `agent/three-game-forge-echoes-integration`
 
@@ -26,11 +24,9 @@ visibility projection, or server authority.
 | Empty/error state | Pass — invalid resume token produced the expected `RESUME FAILED` dialog |
 | Production checkout | Unmodified; implementation remains isolated in the worktree |
 
-The reconnected remote host was inspected read-only and exposes `echoes-server`
-and `echoes-db` as live services. Those production services were not used. For
-acceptance, a disposable loopback-only PostgreSQL container was started on the
-remote host without a volume, connected through a temporary SSH tunnel, and
-removed after the run.
+Acceptance used a disposable loopback-only PostgreSQL container without a
+volume, connected through a temporary tunnel, and removed after the run. Live
+production services were not used.
 
 This is a reversible client bridge proof, not production acceptance of the
 Echoes branch.
