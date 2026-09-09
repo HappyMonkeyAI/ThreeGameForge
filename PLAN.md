@@ -50,6 +50,8 @@
   distribution contract.
 - Keep package manifests private during incubation; generated publish output
   removes `private` and points exports at compiled JS/declaration files.
+- Use `docs/release/PUBLISHING.md` for the owner-controlled registry release
+  and consumer migration sequence.
 
 ## P7 — Public GitHub release readiness
 
