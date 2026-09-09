@@ -48,6 +48,8 @@
   stabilize; migrate consumers from local workspace links to semver ranges.
 - Treat local workspace links as an incubation mode, not the long-term
   distribution contract.
+- Keep package manifests private during incubation; generated publish output
+  removes `private` and points exports at compiled JS/declaration files.
 
 ## P7 — Public GitHub release readiness
 

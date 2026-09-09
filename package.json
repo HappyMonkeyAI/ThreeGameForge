@@ -9,6 +9,7 @@
     "dev": "vite",
     "build": "npm run build:packages && tsc --noEmit && vite build",
     "build:packages": "tsc -p tsconfig.build.json",
+    "validate:packages": "npm run build:packages && node scripts/validate-package-outputs.mjs",
     "audit:consumers": "node scripts/audit-consumers.mjs",
     "audit:consumers:strict": "node scripts/audit-consumers.mjs --strict",
     "typecheck": "tsc --noEmit",

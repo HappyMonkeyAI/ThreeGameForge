@@ -4,7 +4,7 @@ Date: 2026-09-08
 
 ## Decision
 
-The Echoes and MRPG adapter bridges are approved as reversible integration
+The Echoes, MRPG, and Uncivilised adapter bridges are approved as reversible integration
 proofs. The framework and both consumer branches have passing verification
 evidence; production checkouts remain unchanged.
 
@@ -14,6 +14,7 @@ evidence; production checkouts remain unchanged.
 |---|---|---|
 | Echoes of Aion | `agent/three-game-forge-echoes-integration` | Bridge is read-only telemetry from the existing tactical loop; build, browser, persisted campaign, confirmed END TURN, and invalid-resume checks passed. |
 | MRPG Realms | `agent/three-game-forge-mrpg-integration` | Bridge advances an `AdapterHost` from the existing render tick; typecheck, tests, build, browser, health, realm join, and authoritative server-tick readback passed. |
+| Uncivilised Remix | `agent/three-game-forge-uncivilised-integration` | Bridge advances an `AdapterHost` from the existing render-facing game bridge; tests, build, canvas render, frame/tick readback, and confirmed END TURN state change passed. |
 
 ## Current distribution decision
 

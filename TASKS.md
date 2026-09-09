@@ -59,12 +59,13 @@
 - [x] Add an adapter host seam for mounting, stepping, and command submission.
 - [x] Integrate an MRPG bridge in isolated branch `agent/three-game-forge-mrpg-integration`.
 - [x] Integrate an Echoes bridge in isolated branch `agent/three-game-forge-echoes-integration`.
+- [x] Integrate an Uncivilised Remix bridge in isolated branch `agent/three-game-forge-uncivilised-integration`.
 - [x] Review both isolated consumer branches and complete server-backed V2/V3 acceptance.
 - [ ] Merge the reviewed consumer branches under the temporary canonical workspace model (see `docs/integration/OWNER-REVIEW.md`).
 
 ## Package release transition
 
-- [ ] Add package `exports` and publish-output validation for every framework package.
+- [x] Add package `exports` and publish-output validation for every framework package.
 - [ ] Add a clean-fixture `npm pack`/consumer smoke test.
 - [ ] Publish the first semver package set and migrate consumers off local links.
 
@@ -72,7 +73,7 @@
 
 - [x] Audit tracked files and history for internal paths, network details, private repository references, secrets, and license gaps.
 - [x] Convert internal research and verification notes into public-safe documentation.
-- [ ] Add `CONTRIBUTING.md`, `SECURITY.md`, and `CODE_OF_CONDUCT.md`.
-- [ ] Add GitHub issue and pull-request templates.
-- [ ] Add GitHub Actions for install, typecheck, tests, build, consumer audit, and diff hygiene.
+- [x] Add `CONTRIBUTING.md`, `SECURITY.md`, and `CODE_OF_CONDUCT.md`.
+- [x] Add GitHub issue and pull-request templates.
+- [x] Add GitHub Actions for install, typecheck, tests, build, consumer audit, and diff hygiene.
 - [ ] Complete a final public-repository review and obtain explicit approval before changing visibility.
