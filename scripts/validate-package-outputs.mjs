@@ -31,10 +31,7 @@ for (const entry of await packageNames) {
   outputManifest.exports = { '.': { types: './index.d.ts', import: './index.js' } };
   outputManifest.files = ['*.js', '*.d.ts', '*.map'];
   if (outputManifest.dependencies) {
-    outputManifest.dependencies = Object.fromEntries(Object.entries(outputManifest.dependencies).map(([name, version]) => [
-      name,
-      name.startsWith('@three-game-forge/') ? `file:../${name.slice('@three-game-forge/'.length)}` : version,
-    ]));
+    outputManifest.dependencies = { ...outputManifest.dependencies };
   }
   await writeFile(join(outputDir, 'package.json'), `${JSON.stringify(outputManifest, null, 2)}\n`);
 
