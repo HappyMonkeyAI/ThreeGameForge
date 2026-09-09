@@ -14,13 +14,13 @@ await writeFile(resolve(fixture, 'package.json'), `${JSON.stringify({
   private: true,
   type: 'module',
   dependencies: {
-    '@three-game-forge/adapters': 'file:../publish/adapters',
-    '@three-game-forge/networking': 'file:../publish/networking',
+    '@happymonkeyai/adapters': 'file:../publish/adapters',
+    '@happymonkeyai/networking': 'file:../publish/networking',
   },
 }, null, 2)}\n`);
 await writeFile(resolve(fixture, 'smoke.mjs'), `
-import { AdapterHost } from '@three-game-forge/adapters';
-import { SnapshotBuffer } from '@three-game-forge/networking';
+import { AdapterHost } from '@happymonkeyai/adapters';
+import { SnapshotBuffer } from '@happymonkeyai/networking';
 
 const host = new AdapterHost({
   id: 'clean-fixture',
@@ -49,10 +49,10 @@ for (const entry of packageDirectories) {
   execFileSync(npm, ['pack', resolve(root, 'build/publish', entry.name), '--pack-destination', tarballs], npmOptions);
 }
 
-const nodeModules = resolve(fixture, 'node_modules/@three-game-forge');
+const nodeModules = resolve(fixture, 'node_modules/@happymonkeyai');
 await mkdir(nodeModules, { recursive: true });
 for (const packageName of ['adapters', 'networking']) {
-  const archive = (await readdir(tarballs)).find((name) => name.includes(`three-game-forge-${packageName}`) && name.endsWith('.tgz'));
+  const archive = (await readdir(tarballs)).find((name) => name.includes(`happymonkeyai-${packageName}`) && name.endsWith('.tgz'));
   if (!archive) throw new Error(`Missing packed archive for ${packageName}`);
   const unpackDir = resolve(fixture, `.unpack-${packageName}`);
   await mkdir(unpackDir, { recursive: true });

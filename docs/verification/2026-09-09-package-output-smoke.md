@@ -9,3 +9,4 @@ publish output. `npm run smoke:packages` passed with:
 - Runtime checks for `AdapterHost.step` and `SnapshotBuffer.sample`.
 
 The first semver publication and migration from local links remain pending.
+The release scope is `@happymonkeyai/*`, owned by the authenticated npm account.

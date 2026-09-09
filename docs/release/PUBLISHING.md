@@ -4,6 +4,8 @@ The repository currently uses private workspace packages and generated publish
 outputs. The first npm release must happen only after the package scope and
 registry identity are confirmed by the owner.
 
+The selected release scope is `@happymonkeyai/*`.
+
 ## Preflight
 
 ```powershell
