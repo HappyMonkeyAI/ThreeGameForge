@@ -22,9 +22,10 @@ Use option 3 temporarily: keep framework and game repositories in the
 canonical local workspace while the public API is still changing. This avoids
 premature releases but must remain an explicit, documented incubation mode.
 
-The target architecture is option 1: publish/version the framework packages
-and migrate consumers to semver dependencies once the release smoke test and
-API compatibility checks are in place.
+The target architecture is option 1: the first `0.1.0` framework package set
+is published under `@happymonkeyai/*`, and the isolated consumer branches now
+use semver dependencies. Final merge into each dirty production checkout
+remains an owner-controlled step.
 
 ## Merge prerequisite
 

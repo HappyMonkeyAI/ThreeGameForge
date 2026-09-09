@@ -6,8 +6,8 @@ Isolated MRPG integration worktree.
 
 Branch: `agent/three-game-forge-mrpg-integration`
 
-The bridge consumes `@three-game-forge/adapters` and
-`@three-game-forge/networking` through local file dependencies. It reads the
+The bridge consumes `@happymonkeyai/adapters@0.1.0` and
+`@happymonkeyai/networking@0.1.0` through published dependencies. It reads the
 existing MRPG pending-input count and server tick, then advances an
 `AdapterHost` from the existing render tick. It does not mutate Socket.IO,
 movement prediction, reconciliation, chunk authority, or domain state.
