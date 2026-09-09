@@ -66,7 +66,7 @@
 ## Package release transition
 
 - [x] Add package `exports` and publish-output validation for every framework package.
-- [ ] Add a clean-fixture `npm pack`/consumer smoke test.
+- [x] Add a clean-fixture `npm pack`/consumer smoke test.
 - [ ] Publish the first semver package set and migrate consumers off local links.
 
 ## Public GitHub release readiness
