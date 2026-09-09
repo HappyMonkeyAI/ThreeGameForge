@@ -51,6 +51,7 @@
       "evidence": {
         "mrpg": "agent/three-game-forge-mrpg-integration: V0, client V3, and isolated server-backed primary path passed",
         "echoes": "agent/three-game-forge-echoes-integration: V0 build, server-backed primary path, destructive END TURN, invalid-resume error path, client V3, and bridge asset copy passed",
+        "uncivilised": "agent/three-game-forge-uncivilised-integration: V0 tests/build, browser canvas, frame/tick readback, and END TURN state change passed",
         "remaining": "Owner review of isolated consumer branches before any merge; production checkouts remain untouched"
       }
     },
