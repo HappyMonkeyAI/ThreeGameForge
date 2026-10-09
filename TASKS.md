@@ -1,5 +1,16 @@
 # ThreeGameForge Tasks
 
+## Large-world learning transfer — 2026-10-09
+
+- [x] Record source-backed consumer lessons in `.agent/memories/`, map them to inspected framework packages, and add retrieval links. Documentation only; owned paths: memory record/index, AGENTS, CONTEXT, TASKS. Acceptance: sources, applicability limits and proposed/current behavior are explicit; no game rules, source/assets or benchmark claims imported. Verification: local Markdown target existence and `git diff --check`; outcomes recorded in the task report.
+- [ ] Evaluate multi-view wanted/retained residency sets and hysteresis through a bounded `world`/renderer-adapter task; include distant secondary views, resize and teleport acceptance.
+- [ ] Evaluate one shared render-frame build scheduler with count/time limits, stale-work pruning, fair layer ordering and explicit resource/pool ownership; measure a repeated-traversal plateau.
+- [ ] Evaluate diagnostics for actual frame intervals, rolling percentiles/maxima, fixed-step CPU and submission CPU across all views; distinguish GPU/tracked-memory metrics and cold versus warmed results.
+
+These are proposed follow-ups from the memory record, not authorized runtime work or new framework performance guarantees. Keep persistence schemas and product-specific overview/construction behavior in consumers.
+
+Documentation verification: PowerShell regex extraction of Markdown targets in the five owned files, resolved relative to each document and checked with `Test-Path -PathType Leaf`: **11 local links checked, 0 missing**. `git diff --check` passed with line-ending notices only. No runtime tests/build run; no runtime changes, commit or push.
+
 ## Bootstrap
 
 - [x] Initialize Git repository.

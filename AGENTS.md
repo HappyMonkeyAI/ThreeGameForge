@@ -2,6 +2,8 @@
 
 This project follows the HappyMonkeyAI AgentsProtocol conventions: ground work in the project documents, map blast radius before non-trivial changes, preserve lessons in `.agent/memories/`, and verify behavior independently.
 
+Start relevant lesson retrieval at `.agent/memories/patterns_and_lessons.md`. For world streaming, diagnostics, resource ownership or async lifecycle work, consult the linked large-world record and recheck its source/contracts before reuse. Consumer measurements do not establish framework acceptance.
+
 ## Local safety rules
 
 - Do not reset, clean, or discard worktree changes.
