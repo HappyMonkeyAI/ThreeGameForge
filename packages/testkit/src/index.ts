@@ -19,6 +19,11 @@ export type TestHooks = {
   /** Optional SceneSpec readback for AI-bridge / playground verification. */
   getSceneSpec?(): unknown;
   getEntityIds?(): string[];
+  /** Optional repair-panel controls for E2E verification. */
+  getRepairLog?(): string;
+  setRepairDraft?(json: string): void;
+  validateRepairDraft?(): Promise<{ ok: boolean; errors?: unknown }>;
+  repairAndApplyDraft?(): Promise<{ ok: boolean; attempts?: number; error?: string }>;
 };
 
 export function validateEvidenceManifest(manifest: EvidenceManifest): void {

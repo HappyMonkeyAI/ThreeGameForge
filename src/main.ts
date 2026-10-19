@@ -5,15 +5,25 @@ import { KeyboardInput } from '../packages/input/src/index';
 import { OrbitCameraRig } from '../packages/camera/src/index';
 import { QualityController } from '../packages/renderer/src/index';
 import { createGltfLoadModel } from '../packages/assets/src/index';
-import { applySceneSpec, validateSceneSpec, type SceneSpec } from '../packages/scene/src/index';
+import {
+  applySceneSpec,
+  createLlmSceneRepairer,
+  createOpenAiCompatibleComplete,
+  repairSceneSpec,
+  validateSceneSpec,
+  type ApplySceneResult,
+  type SceneSpec,
+} from '../packages/scene/src/index';
 import {
   FILTERED_CRATE_VITE_FS_URL,
   SANDBOX_CRATE_ASSET_ID,
 } from './sandboxAssets';
+import { resolveLlmHost } from './llmHost';
 import goldenScene from '../fixtures/scenes/golden.json';
 import filteredWrenCamp from '../fixtures/scenes/consumers/filtered-wren-camp-blockout.json';
 import mercenaryOrbit from '../fixtures/scenes/consumers/mercenary-orbit-blockout.json';
 import modelCrate from '../fixtures/scenes/model-crate.json';
+import brokenNamedColor from '../fixtures/scenes/repair/broken-named-color.json';
 
 const SCENE_CATALOG: Record<string, unknown> = {
   golden: goldenScene,
@@ -38,7 +48,6 @@ function crateBoxFallback(assetId: string): THREE.Object3D {
   return mesh;
 }
 
-/** Prefer sibling Filtered GLB (local sandbox); fall back to a box if unavailable. */
 async function loadModel(assetId: string): Promise<THREE.Object3D> {
   if (assetId !== SANDBOX_CRATE_ASSET_ID) throw new Error(`Unknown playground asset: ${assetId}`);
   try {
@@ -49,27 +58,35 @@ async function loadModel(assetId: string): Promise<THREE.Object3D> {
   }
 }
 
+function parseDraft(text: string): unknown {
+  return JSON.parse(text) as unknown;
+}
+
 async function boot(): Promise<void> {
   const app = document.querySelector<HTMLDivElement>('#app');
   if (!app) throw new Error('Application root is missing');
   const root = app;
-
-  const requested = new URLSearchParams(window.location.search).get('scene') ?? 'golden';
-  const sceneInput = SCENE_CATALOG[requested];
+  const params = new URLSearchParams(window.location.search);
+  const requested = params.get('scene') ?? 'golden';
+  const startInRepair = params.get('mode') === 'repair' || requested === 'repair';
+  const sceneInput = startInRepair ? goldenScene : SCENE_CATALOG[requested];
   if (!sceneInput) {
-    throw new Error(`Unknown scene "${requested}". Allowed: ${Object.keys(SCENE_CATALOG).join(', ')}`);
+    throw new Error(`Unknown scene "${requested}". Allowed: ${Object.keys(SCENE_CATALOG).join(', ')}, repair`);
   }
 
+  const llm = resolveLlmHost();
   const scene = new THREE.Scene();
-  const validation = validateSceneSpec(sceneInput);
+  let validation = validateSceneSpec(sceneInput);
   if (!validation.ok) {
     throw new Error(
-      `SceneSpec "${requested}" failed validation: ${validation.errors.map((issue) => `${issue.path}: ${issue.message}`).join('; ')}`,
+      `SceneSpec failed validation: ${validation.errors.map((issue) => `${issue.path}: ${issue.message}`).join('; ')}`,
     );
   }
-  const spec: SceneSpec = validation.spec;
+  let spec: SceneSpec = validation.spec;
+  let sceneLabel = startInRepair ? 'golden (repair mode)' : requested;
+  let applied: ApplySceneResult = await applySceneSpec(scene, spec, { loadModel });
+  let repairLog = 'Ready. Load a broken draft, then Validate or Repair + Apply.';
 
-  const applied = await applySceneSpec(scene, spec, { loadModel });
   const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
   const cameraRig = new OrbitCameraRig({
     radius: applied.cameraRadius,
@@ -84,8 +101,159 @@ async function boot(): Promise<void> {
 
   const status = document.createElement('pre');
   status.className = 'status';
-  status.textContent = 'ThreeGameForge runtime booting…';
   root.appendChild(status);
+
+  const panel = document.createElement('section');
+  panel.className = 'repair-panel';
+  panel.innerHTML = `
+    <h1>SceneSpec repair</h1>
+    <p>Validate locally, or repair via ${llm.model} then apply to the canvas.</p>
+    <textarea spellcheck="false" aria-label="SceneSpec JSON draft"></textarea>
+    <div class="repair-actions">
+      <button type="button" data-action="load-broken">Load broken sample</button>
+      <button type="button" data-action="validate">Validate</button>
+      <button type="button" data-action="repair">Repair + Apply</button>
+      <button type="button" data-action="apply">Apply draft</button>
+    </div>
+    <pre class="repair-log" aria-live="polite"></pre>
+  `;
+  root.appendChild(panel);
+  const draftNode = panel.querySelector('textarea');
+  const logNode = panel.querySelector('.repair-log');
+  const buttonNodes = [...panel.querySelectorAll('button')];
+  if (!(draftNode instanceof HTMLTextAreaElement) || !(logNode instanceof HTMLPreElement)) {
+    throw new Error('Repair panel failed to mount');
+  }
+  const draftArea: HTMLTextAreaElement = draftNode;
+  const logEl: HTMLPreElement = logNode;
+
+  draftArea.value = JSON.stringify(startInRepair ? brokenNamedColor : sceneInput, null, 2);
+
+  function setBusy(busy: boolean): void {
+    for (const button of buttonNodes) {
+      if (button instanceof HTMLButtonElement) button.disabled = busy;
+    }
+  }
+
+  function writeLog(message: string): void {
+    repairLog = message;
+    logEl.textContent = message;
+  }
+
+  async function replaceScene(nextSpec: SceneSpec, label: string): Promise<void> {
+    applied.dispose();
+    spec = nextSpec;
+    sceneLabel = label;
+    applied = await applySceneSpec(scene, spec, { loadModel });
+    cameraRig.radius = applied.cameraRadius;
+    cameraRig.elevation = applied.cameraElevation;
+    cameraRig.target.copy(applied.cameraTarget);
+    cameraRig.applyTo(camera);
+  }
+
+  async function validateDraft(): Promise<{ ok: boolean; errors?: unknown }> {
+    try {
+      const draft = parseDraft(draftArea.value);
+      const result = validateSceneSpec(draft);
+      if (result.ok) {
+        writeLog('Valid SceneSpec.');
+        return { ok: true };
+      }
+      writeLog(
+        `Invalid:\n${result.errors.map((issue) => `- ${issue.path || '/'}: ${issue.message}`).join('\n')}`,
+      );
+      return { ok: false, errors: result.errors };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      writeLog(`Parse error: ${message}`);
+      return { ok: false, errors: [{ path: '', message }] };
+    }
+  }
+
+  async function applyDraft(): Promise<{ ok: boolean; error?: string }> {
+    try {
+      const draft = parseDraft(draftArea.value);
+      const result = validateSceneSpec(draft);
+      if (!result.ok) {
+        writeLog(
+          `Cannot apply:\n${result.errors.map((issue) => `- ${issue.path || '/'}: ${issue.message}`).join('\n')}`,
+        );
+        return { ok: false, error: 'invalid' };
+      }
+      await replaceScene(result.spec, 'draft');
+      draftArea.value = JSON.stringify(result.spec, null, 2);
+      writeLog(`Applied ${result.spec.entities.length} entities (${result.spec.environment}).`);
+      return { ok: true };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      writeLog(`Apply failed: ${message}`);
+      return { ok: false, error: message };
+    }
+  }
+
+  async function repairAndApply(): Promise<{ ok: boolean; attempts?: number; error?: string }> {
+    setBusy(true);
+    writeLog(`Repairing with ${llm.model}…`);
+    try {
+      const draft = parseDraft(draftArea.value);
+      const complete = createOpenAiCompatibleComplete({
+        baseUrl: llm.baseUrl,
+        model: llm.model,
+        temperature: 0.1,
+        maxTokens: 4096,
+      });
+      const repairer = createLlmSceneRepairer({ complete });
+      const started = performance.now();
+      const result = await repairSceneSpec(draft, { repairer, maxAttempts: 4 });
+      const elapsedMs = Math.round(performance.now() - started);
+      if (!result.ok) {
+        writeLog(
+          `Repair failed after ${result.attempts} attempt(s) (${elapsedMs}ms)\n`
+          + result.errors.map((issue) => `- ${issue.path || '/'}: ${issue.message}`).join('\n'),
+        );
+        return { ok: false, attempts: result.attempts, error: 'repair-failed' };
+      }
+      await replaceScene(result.spec, `repaired/${llm.model}`);
+      draftArea.value = JSON.stringify(result.spec, null, 2);
+      writeLog(
+        `Repaired in ${result.attempts} attempt(s), ${elapsedMs}ms\n`
+        + `history rounds: ${result.history.length}\n`
+        + `entities: ${result.spec.entities.length}`,
+      );
+      return { ok: true, attempts: result.attempts };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      writeLog(`Repair error: ${message}`);
+      return { ok: false, error: message };
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  panel.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLButtonElement)) return;
+    const action = target.dataset.action;
+    if (action === 'load-broken') {
+      draftArea.value = JSON.stringify(brokenNamedColor, null, 2);
+      writeLog('Loaded broken-named-color sample.');
+      return;
+    }
+    if (action === 'validate') {
+      void validateDraft();
+      return;
+    }
+    if (action === 'apply') {
+      void applyDraft();
+      return;
+    }
+    if (action === 'repair') {
+      void repairAndApply();
+    }
+  });
+
+  writeLog(repairLog);
+
   const lifecycle = new RuntimeLifecycle();
   const diagnostics = new RuntimeDiagnostics();
   const quality = new QualityController();
@@ -125,19 +293,18 @@ async function boot(): Promise<void> {
       quality.observe(frame.frameDeltaMs);
       status.textContent = [
         'ThreeGameForge SceneSpec playground',
-        `scene: ${requested}`,
+        `scene: ${sceneLabel}`,
         `source: ${spec.meta?.source ?? 'local'}`,
         `environment: ${spec.environment}`,
         `entities: ${applied.entities.size}`,
+        `llm: ${llm.model}`,
         `lifecycle: ${lifecycle.state}`,
-        `fixed step: ${runtime.fixedStep.toFixed(4)}s`,
         `simulation steps: ${runtime.stats.simulationSteps}`,
-        `elapsed: ${runtime.stats.elapsed.toFixed(1)}s`,
         `frames: ${frame.frames}`,
         `quality tier: ${quality.tier}`,
         `draw calls: ${renderer.info.render.calls}`,
         `triangles: ${renderer.info.render.triangles}`,
-        'switch: ?scene=golden|filtered-wren-camp|mercenary-orbit|model-crate',
+        'switch: ?scene=golden|…  repair: ?mode=repair',
       ].join('\n');
     },
   );
@@ -149,9 +316,18 @@ async function boot(): Promise<void> {
       return { state };
     },
     setPausedForScreenshot: (paused: boolean) => runtime.setPaused(paused),
-    hideDebugUi: () => { status.hidden = true; },
+    hideDebugUi: () => {
+      status.hidden = true;
+      panel.hidden = true;
+    },
     getSceneSpec: () => spec,
     getEntityIds: () => [...applied.entities.keys()],
+    getRepairLog: () => repairLog,
+    setRepairDraft: (json: string) => {
+      draftArea.value = json;
+    },
+    validateRepairDraft: () => validateDraft(),
+    repairAndApplyDraft: () => repairAndApply(),
   };
 
   runtime.start();

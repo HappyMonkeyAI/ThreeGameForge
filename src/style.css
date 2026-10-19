@@ -1,5 +1,104 @@
-:root { color-scheme: dark; font-family: system-ui, sans-serif; background: #07111f; }
+:root {
+  color-scheme: dark;
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+  background: #07111f;
+  --panel: #0b1626ee;
+  --line: #315173;
+  --text: #b9d7ff;
+  --muted: #7f9bb8;
+  --accent: #4ee6c1;
+}
 * { box-sizing: border-box; }
 html, body, #app { width: 100%; height: 100%; margin: 0; overflow: hidden; }
 canvas { display: block; width: 100%; height: 100%; }
-.status { position: fixed; top: 1rem; left: 1rem; margin: 0; padding: .75rem 1rem; border: 1px solid #315173; border-radius: .5rem; background: #07111fcc; color: #b9d7ff; font: 12px/1.5 ui-monospace, monospace; pointer-events: none; }
+.status {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
+  margin: 0;
+  padding: .75rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: .5rem;
+  background: var(--panel);
+  color: var(--text);
+  font: 12px/1.5 "IBM Plex Mono", ui-monospace, monospace;
+  pointer-events: none;
+  max-width: min(28rem, calc(100vw - 22rem));
+}
+.repair-panel {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 3;
+  width: min(22rem, calc(100vw - 2rem));
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  padding: .75rem;
+  border: 1px solid var(--line);
+  border-radius: .5rem;
+  background: var(--panel);
+  color: var(--text);
+}
+.repair-panel h1 {
+  margin: 0;
+  font: 600 0.95rem/1.2 "IBM Plex Sans", sans-serif;
+  color: var(--accent);
+}
+.repair-panel p {
+  margin: 0;
+  font: 11px/1.4 "IBM Plex Sans", sans-serif;
+  color: var(--muted);
+}
+.repair-panel textarea {
+  flex: 1;
+  min-height: 12rem;
+  resize: none;
+  border: 1px solid var(--line);
+  border-radius: .35rem;
+  background: #07111f;
+  color: var(--text);
+  font: 11px/1.45 "IBM Plex Mono", ui-monospace, monospace;
+  padding: .5rem;
+}
+.repair-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+}
+.repair-panel button {
+  border: 1px solid var(--line);
+  border-radius: .35rem;
+  background: #122338;
+  color: var(--text);
+  font: 600 11px/1 "IBM Plex Sans", sans-serif;
+  padding: .45rem .65rem;
+  cursor: pointer;
+}
+.repair-panel button:hover { border-color: var(--accent); color: var(--accent); }
+.repair-panel button:disabled { opacity: 0.5; cursor: wait; }
+.repair-log {
+  margin: 0;
+  max-height: 9rem;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: .35rem;
+  background: #07111f;
+  color: var(--muted);
+  font: 10px/1.4 "IBM Plex Mono", ui-monospace, monospace;
+  padding: .45rem;
+  white-space: pre-wrap;
+}
+@media (max-width: 720px) {
+  .status { max-width: calc(100vw - 2rem); }
+  .repair-panel {
+    top: auto;
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    width: auto;
+    max-height: 45vh;
+  }
+}

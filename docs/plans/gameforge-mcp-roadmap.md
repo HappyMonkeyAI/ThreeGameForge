@@ -47,9 +47,9 @@ Export/admit cleaned assets into Unreal as a **consumer**, not the primary MCP s
 
 ## Immediate Forge work (before MCP server)
 
-1. Playground E2E: broken JSON → repair (local LLM) → apply → canvas readback.
+1. ~~Playground E2E: broken JSON → repair (local LLM) → apply → canvas readback.~~ Done via `?mode=repair` panel + Vite `/llm` proxy (2026-10-19).
 2. Small live repair eval set against `google/gemma-4-e2b` (LAN).
-3. Commit `feature/ai-scene-spec-spike` when the owner requests it.
+3. ~~Commit `feature/ai-scene-spec-spike` when the owner requests it.~~ Committed/pushed `933dee2`.
 
 ## Non-goals
 
