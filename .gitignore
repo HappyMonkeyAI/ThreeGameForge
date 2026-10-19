@@ -3,6 +3,8 @@ dist/
 build/
 .vite/
 artifacts/
+tmp/
+.sandbox/
 *.log
 .env
 .env.*

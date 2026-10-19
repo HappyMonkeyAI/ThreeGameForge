@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -18,12 +20,13 @@
     "eval:repair-scene": "tsx scripts/eval-scene-repair.mts",
     "mcp": "tsx packages/mcp/src/index.ts",
     "smoke:mcp": "tsx scripts/smoke-mcp-session.mts",
-    "test": "tsx --test tests/runtime.test.ts tests/scene.test.ts tests/scene-consumers.test.ts tests/scene-repair.test.ts tests/scene-model.test.ts tests/scene-llm-repair.test.ts tests/sibling-crate-hash.test.ts tests/assets-gltf.test.ts tests/openai-complete.test.ts tests/scene-repair-eval-manifest.test.ts tests/mcp-session.test.ts tests/mcp-pipeline.test.ts"
+    "test": "tsx --test tests/runtime.test.ts tests/scene.test.ts tests/scene-consumers.test.ts tests/scene-repair.test.ts tests/scene-model.test.ts tests/scene-llm-repair.test.ts tests/sibling-crate-hash.test.ts tests/assets-gltf.test.ts tests/openai-complete.test.ts tests/scene-repair-eval-manifest.test.ts tests/mcp-session.test.ts tests/mcp-pipeline.test.ts tests/mcp-pipeline-queue.test.ts"
   },
   "dependencies": {
     "three": "^0.170.0"
   },
   "devDependencies": {
+    "@types/node": "^22.20.5",
     "@types/three": "^0.170.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",

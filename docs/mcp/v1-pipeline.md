@@ -1,6 +1,6 @@
 # GameForge MCP v1 — asset pipeline (incubation)
 
-Status: catalog + host status tools landed; queue/poll/register not yet wired.
+Status: catalog, host status, queue/poll/register landed (2026-10-19). Live Comfy submit still host-gated.
 
 ## Thesis
 
@@ -12,12 +12,12 @@ Agents get **named recipes**, not raw Comfy graphs. Workflow JSON stays in the s
 | --- | --- | --- |
 | `list_pipeline_recipes` | **live** | Closed recipe catalog |
 | `get_pipeline_host_status` | **live** | Reachability of ComfyUI (`TGF_COMFYUI_BASE_URL`) |
-| `queue_concept_image` | planned | Submit text→image via a named recipe |
-| `queue_image_to_3d` | planned | Submit image→GLB (Pixal3D / TRELLIS.2) |
-| `poll_job` | planned | Poll one job; never clear/cancel foreign queue work |
+| `queue_concept_image` | **live** | Named recipe submit; refuses if queue busy; prompt patch for `concept-flux2-klein` |
+| `queue_image_to_3d` | **live** | Pixal3D / TRELLIS.2; refuses if queue busy |
+| `poll_job` | **live** | `/history` then `/queue`; never clears |
+| `register_asset` | **live** | Copy `.glb` → admit dir + sha256 provenance sidecar |
 | `inspect_glb` | planned | Triangle/material/bounds summary |
 | `blender_clean_glb` | planned | Host Blender script when available |
-| `register_asset` | planned | Admit GLB + provenance → `model.asset` id for SceneSpec |
 
 ## Recipe ids (v1 closed set)
 

@@ -1,7 +1,14 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
+import { registerAdmittedAsset } from './pipeline/admit.ts';
 import { listPipelineRecipes } from './pipeline/catalog.ts';
+import { pollComfyPrompt, submitComfyPrompt } from './pipeline/comfyClient.ts';
 import { getComfyHostStatus } from './pipeline/comfyStatus.ts';
+import {
+  applyConceptOverrides,
+  applyImageTo3dOverrides,
+  loadRecipeGraph,
+} from './pipeline/recipeLoad.ts';
 import { GameForgeSession, type RepairMode } from './session.ts';
 
 function ok(value: unknown) {
@@ -23,16 +30,29 @@ const specInput = z.unknown();
 export type GameForgeMcpHostEnv = {
   comfyBaseUrl?: string;
   pipelineRefRoot?: string;
+  assetAdmitDir?: string;
 };
 
-/** GameForge MCP: SceneSpec tools (v0) + pipeline catalog/status (v1 incubation). */
+function requireComfyBase(host: GameForgeMcpHostEnv): string {
+  const base = host.comfyBaseUrl?.trim();
+  if (!base) throw new Error('TGF_COMFYUI_BASE_URL is required');
+  return base;
+}
+
+function requirePipelineRoot(host: GameForgeMcpHostEnv): string {
+  const root = host.pipelineRefRoot?.trim();
+  if (!root) throw new Error('TGF_PIPELINE_REF_ROOT is required to load named recipe workflows');
+  return root;
+}
+
+/** GameForge MCP: SceneSpec (v0) + pipeline catalog/queue/admit (v1). */
 export function createGameForgeMcpServer(
   session: GameForgeSession = new GameForgeSession(),
   host: GameForgeMcpHostEnv = {},
 ): McpServer {
   const server = new McpServer({
     name: 'gameforge',
-    version: '0.1.1',
+    version: '0.2.0',
   });
 
   server.registerTool(
@@ -157,6 +177,101 @@ export function createGameForgeMcpServer(
       inputSchema: {},
     },
     async () => ok(await getComfyHostStatus(host.comfyBaseUrl)),
+  );
+
+  server.registerTool(
+    'queue_concept_image',
+    {
+      description:
+        'Submit a named concept-image recipe to ComfyUI (refuses if queue busy). Requires TGF_COMFYUI_BASE_URL + TGF_PIPELINE_REF_ROOT. v1 prompt patch: concept-flux2-klein.',
+      inputSchema: {
+        recipeId: z.string().describe('Closed catalog recipe id'),
+        prompt: z.string().min(1),
+        seed: z.number().int().optional(),
+        filenamePrefix: z.string().optional(),
+      },
+    },
+    async ({ recipeId, prompt, seed, filenamePrefix }) => {
+      try {
+        const baseUrl = requireComfyBase(host);
+        const { recipe, graph, sourcePath } = await loadRecipeGraph(requirePipelineRoot(host), recipeId);
+        if (recipe.stage !== 'concept-image') {
+          throw new Error(`Recipe ${recipeId} is stage ${recipe.stage}, not concept-image`);
+        }
+        applyConceptOverrides(recipeId, graph, { prompt, seed, filenamePrefix });
+        const submitted = await submitComfyPrompt(baseUrl, graph);
+        return ok({ ...submitted, recipeId, sourcePath });
+      } catch (error) {
+        return fail(error instanceof Error ? error.message : String(error));
+      }
+    },
+  );
+
+  server.registerTool(
+    'queue_image_to_3d',
+    {
+      description:
+        'Submit a named image-to-3d recipe (Pixal3D / TRELLIS.2). imageRef is the Comfy input filename. Refuses if queue busy.',
+      inputSchema: {
+        recipeId: z.string(),
+        imageRef: z.string().min(1).describe('ComfyUI input image filename'),
+        filenamePrefix: z.string().optional(),
+      },
+    },
+    async ({ recipeId, imageRef, filenamePrefix }) => {
+      try {
+        const baseUrl = requireComfyBase(host);
+        const { recipe, graph, sourcePath } = await loadRecipeGraph(requirePipelineRoot(host), recipeId);
+        if (recipe.stage !== 'image-to-3d') {
+          throw new Error(`Recipe ${recipeId} is stage ${recipe.stage}, not image-to-3d`);
+        }
+        applyImageTo3dOverrides(recipeId, graph, { imageRef, filenamePrefix });
+        const submitted = await submitComfyPrompt(baseUrl, graph);
+        return ok({ ...submitted, recipeId, sourcePath, imageRef });
+      } catch (error) {
+        return fail(error instanceof Error ? error.message : String(error));
+      }
+    },
+  );
+
+  server.registerTool(
+    'poll_job',
+    {
+      description:
+        'Poll one ComfyUI prompt_id via /history (and /queue if still pending). Never resubmits or clears jobs.',
+      inputSchema: {
+        promptId: z.string().min(1),
+      },
+    },
+    async ({ promptId }) => {
+      try {
+        return ok(await pollComfyPrompt(requireComfyBase(host), promptId));
+      } catch (error) {
+        return fail(error instanceof Error ? error.message : String(error));
+      }
+    },
+  );
+
+  server.registerTool(
+    'register_asset',
+    {
+      description:
+        'Copy a local .glb into TGF_ASSET_ADMIT_DIR with sha256 provenance sidecar (sandbox rights). Returns assetId for SceneSpec model.asset.',
+      inputSchema: {
+        localGlbPath: z.string().min(1),
+        assetId: z.string().min(2).max(64),
+        meta: z.record(z.unknown()).optional(),
+      },
+    },
+    async ({ localGlbPath, assetId, meta }) => {
+      try {
+        const admitDir = host.assetAdmitDir?.trim();
+        if (!admitDir) throw new Error('TGF_ASSET_ADMIT_DIR is required');
+        return ok(await registerAdmittedAsset({ admitDir, localGlbPath, assetId, meta }));
+      } catch (error) {
+        return fail(error instanceof Error ? error.message : String(error));
+      }
+    },
   );
 
   return server;

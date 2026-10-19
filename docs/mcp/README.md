@@ -16,6 +16,10 @@ stdio MCP server exposing SceneSpec tools so agents can validate, repair, and ap
 | `screenshot` | Returns error in v0 (use playground) |
 | `list_pipeline_recipes` | MCP v1 catalog (named recipes only) |
 | `get_pipeline_host_status` | Read-only ComfyUI `/system_stats` when `TGF_COMFYUI_BASE_URL` set |
+| `queue_concept_image` | Submit named concept recipe (idle queue only) |
+| `queue_image_to_3d` | Submit named i2_3d recipe (idle queue only) |
+| `poll_job` | Poll one `prompt_id` |
+| `register_asset` | Admit `.glb` + provenance → SceneSpec `model.asset` |
 
 ## Run
 
@@ -43,7 +47,8 @@ Cursor / Claude MCP config example:
         "TGF_LLM_BASE_URL": "http://192.168.5.229:1234/v1",
         "TGF_LLM_MODEL": "google/gemma-4-e2b",
         "TGF_COMFYUI_BASE_URL": "http://192.168.5.157:8188",
-        "TGF_PIPELINE_REF_ROOT": "C:/Users/steph/Documents/development/threejs-pipeline"
+        "TGF_PIPELINE_REF_ROOT": "C:/Users/steph/Documents/development/threejs-pipeline",
+        "TGF_ASSET_ADMIT_DIR": "C:/Users/steph/Documents/development/ThreeGameForge/.sandbox/admitted-assets"
       }
     }
   }
@@ -58,7 +63,7 @@ LLM env vars are only required for `repair_scene_spec` with `mode: "llm"`. Scrip
 
 2026-10-19 Cursor `user-gameforge`: `get_scene_vocabulary` → validate/repair `realmfront-r0-broken.json` (scripted, 2 attempts) → `apply_scene_spec` on `realmfront-r0-blockout.json` → readback 15 entity ids / objectCount 17; `screenshot` correctly errors in v0.
 
-Pipeline design: [v1-pipeline.md](./v1-pipeline.md).
+Pipeline design: [v1-pipeline.md](./v1-pipeline.md). Live Comfy concept dry-run: [dryrun-2026-10-19-comfy-concept.md](./dryrun-2026-10-19-comfy-concept.md).
 
 ## Non-goals (v0 / v1 incubation)
 

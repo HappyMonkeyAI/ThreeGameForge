@@ -52,8 +52,10 @@ Export/admit cleaned assets into Unreal as a **consumer**, not the primary MCP s
 3. ~~Commit `feature/ai-scene-spec-spike` when the owner requests it.~~ Committed/pushed; playground E2E follow-up on same branch.
 4. ~~GameForge MCP v0 (Forge tools only).~~ `packages/mcp` + `npm run mcp` (2026-10-19).
 5. ~~Live Cursor MCP exercise: realmfront R0 broken → scripted repair → apply full blockout → readback (15 entities, objectCount 17).~~ 2026-10-19 via `user-gameforge`.
-6. MCP v1 incubation: `list_pipeline_recipes` + `get_pipeline_host_status` + [docs/mcp/v1-pipeline.md](../mcp/v1-pipeline.md) (2026-10-19). Queue/poll/register still planned.
-7. Next: wire `queue_*` / `poll_job` / `register_asset` against host ComfyUI (no foreign queue clears).
+6. MCP v1 incubation: catalog + host status (2026-10-19).
+7. ~~Wire `queue_*` / `poll_job` / `register_asset`.~~ Landed with busy-queue refuse + admit provenance (2026-10-19).
+8. ~~Live Comfy concept dry-run.~~ `concept-flux2-klein` crate → success PNG (see `docs/mcp/dryrun-2026-10-19-comfy-concept.md`).
+9. Next: upload concept → `queue_image_to_3d` → `register_asset` → SceneSpec model apply; then `inspect_glb` / optional Blender clean.
 
 ## Non-goals
 

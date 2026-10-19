@@ -24,7 +24,7 @@ export const PIPELINE_RECIPES: readonly PipelineRecipe[] = [
     stage: 'concept-image',
     title: 'Z-Image Turbo text-to-image',
     refPath: 'image_z_image_turbo.json',
-    notes: 'Alternate concept recipe; verify nodes against /object_info before queue.',
+    notes: 'Catalogued; prompt patch map not wired yet — use concept-flux2-klein for queue_concept_image.',
   },
   {
     id: 'i2_3d-pixal3d',

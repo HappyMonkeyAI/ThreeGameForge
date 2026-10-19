@@ -12,7 +12,8 @@
         "TGF_LLM_BASE_URL": "http://192.168.5.229:1234/v1",
         "TGF_LLM_MODEL": "google/gemma-4-e2b",
         "TGF_COMFYUI_BASE_URL": "http://192.168.5.157:8188",
-        "TGF_PIPELINE_REF_ROOT": "C:/Users/steph/Documents/development/threejs-pipeline"
+        "TGF_PIPELINE_REF_ROOT": "C:/Users/steph/Documents/development/threejs-pipeline",
+        "TGF_ASSET_ADMIT_DIR": "C:/Users/steph/Documents/development/ThreeGameForge/.sandbox/admitted-assets"
       }
     }
   }
