@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "environment": "studio",
+  "camera": { "type": "orbit", "target": "panel" },
+  "entities": [
+    {
+      "id": "panel",
+      "type": "mesh",
+      "geometry": "plane",
+      "material": { "type": "phong", "color": "lime" },
+      "components": ["orbit-target"]
+    }
+  ]
+}

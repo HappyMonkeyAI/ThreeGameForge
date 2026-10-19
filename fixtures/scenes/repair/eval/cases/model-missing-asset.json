@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "environment": "studio",
+  "camera": { "type": "orbit", "target": "prop" },
+  "entities": [
+    {
+      "id": "prop",
+      "type": "model",
+      "model": { "asset": "" },
+      "components": ["orbit-target"]
+    }
+  ]
+}

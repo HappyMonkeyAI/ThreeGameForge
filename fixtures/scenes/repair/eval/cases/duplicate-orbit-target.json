@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "environment": "studio",
+  "camera": { "type": "orbit", "target": "a" },
+  "entities": [
+    {
+      "id": "a",
+      "type": "mesh",
+      "geometry": "box",
+      "material": { "type": "standard", "color": "#cccccc" },
+      "components": ["orbit-target"]
+    },
+    {
+      "id": "b",
+      "type": "mesh",
+      "geometry": "sphere",
+      "material": { "type": "standard", "color": "#888888" },
+      "components": ["orbit-target"]
+    }
+  ]
+}

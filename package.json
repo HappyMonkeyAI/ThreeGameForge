@@ -15,7 +15,8 @@
     "audit:consumers:strict": "node scripts/audit-consumers.mjs --strict",
     "typecheck": "tsc --noEmit",
     "demo:repair-scene": "tsx scripts/repair-scene-local.mts",
-    "test": "tsx --test tests/runtime.test.ts tests/scene.test.ts tests/scene-consumers.test.ts tests/scene-repair.test.ts tests/scene-model.test.ts tests/scene-llm-repair.test.ts tests/sibling-crate-hash.test.ts tests/assets-gltf.test.ts tests/openai-complete.test.ts"
+    "eval:repair-scene": "tsx scripts/eval-scene-repair.mts",
+    "test": "tsx --test tests/runtime.test.ts tests/scene.test.ts tests/scene-consumers.test.ts tests/scene-repair.test.ts tests/scene-model.test.ts tests/scene-llm-repair.test.ts tests/sibling-crate-hash.test.ts tests/assets-gltf.test.ts tests/openai-complete.test.ts tests/scene-repair-eval-manifest.test.ts"
   },
   "dependencies": {
     "three": "^0.170.0"

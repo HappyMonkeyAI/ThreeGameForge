@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "environment": "night",
+  "camera": { "type": "orbit", "target": "knot" },
+  "entities": [
+    {
+      "id": "knot",
+      "type": "mesh",
+      "geometry": "torus-knot",
+      "material": { "type": "standard", "color": "#00ff88" },
+      "components": ["orbit-target", "rotatable"]
+    }
+  ]
+}

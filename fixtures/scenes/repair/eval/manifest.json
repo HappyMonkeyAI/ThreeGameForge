@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "description": "Live SceneSpec repair eval against a local OpenAI-compatible LLM",
+  "defaults": {
+    "maxAttempts": 4,
+    "expectOk": true
+  },
+  "cases": [
+    {
+      "id": "named-color",
+      "fixture": "cases/named-color.json",
+      "checks": { "entityIds": ["hero"], "colorIsHex": true, "forbiddenComponents": ["fly-around"] }
+    },
+    {
+      "id": "missing-target",
+      "fixture": "cases/missing-target.json",
+      "checks": { "entityIds": ["box"], "cameraTargetExists": true }
+    },
+    {
+      "id": "bad-environment",
+      "fixture": "cases/bad-environment.json",
+      "checks": { "environmentOneOf": ["studio", "sunset", "night"] }
+    },
+    {
+      "id": "unknown-component",
+      "fixture": "cases/unknown-component.json",
+      "checks": { "forbiddenComponents": ["physics-body", "keyboard-controller"] }
+    },
+    {
+      "id": "bad-material-type",
+      "fixture": "cases/bad-material-type.json",
+      "checks": { "materialType": "standard", "colorIsHex": true }
+    },
+    {
+      "id": "invented-geometry",
+      "fixture": "cases/invented-geometry.json",
+      "checks": {
+        "geometryOneOf": ["box", "sphere", "cylinder", "icosahedron", "plane"]
+      }
+    },
+    {
+      "id": "duplicate-orbit-target",
+      "fixture": "cases/duplicate-orbit-target.json",
+      "checks": { "atMostOneOrbitTarget": true }
+    },
+    {
+      "id": "bad-camera-type",
+      "fixture": "cases/bad-camera-type.json",
+      "checks": { "cameraTypeOneOf": ["orbit", "fixed"] }
+    },
+    {
+      "id": "model-missing-asset",
+      "fixture": "cases/model-missing-asset.json",
+      "checks": { "hasModelAsset": true }
+    },
+    {
+      "id": "multi-error-cabin",
+      "fixture": "cases/multi-error-cabin.json",
+      "checks": {
+        "environmentOneOf": ["studio", "sunset", "night"],
+        "colorIsHex": true,
+        "cameraTargetExists": true,
+        "forbiddenComponents": ["npc-brain"]
+      }
+    }
+  ]
+}

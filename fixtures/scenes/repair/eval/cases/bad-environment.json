@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "environment": "cyberpunk-neon",
+  "camera": { "type": "fixed" },
+  "entities": [
+    {
+      "id": "orb",
+      "type": "mesh",
+      "geometry": "sphere",
+      "material": { "type": "standard", "color": "#44aaff" }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "environment": "studio",
+  "camera": { "type": "orbit", "target": "hero", "radius": 5 },
+  "entities": [
+    {
+      "id": "hero",
+      "type": "mesh",
+      "geometry": "box",
+      "material": { "type": "standard", "color": "orange", "roughness": 0.3 },
+      "components": ["orbit-target", "fly-around"]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "environment": "night",
+  "camera": { "type": "first-person", "target": "beacon" },
+  "entities": [
+    {
+      "id": "beacon",
+      "type": "mesh",
+      "geometry": "cylinder",
+      "material": { "type": "standard", "color": "#75d2cb", "emissive": "#75d2cb", "emissiveIntensity": 1 },
+      "components": ["orbit-target"]
+    }
+  ]
+}

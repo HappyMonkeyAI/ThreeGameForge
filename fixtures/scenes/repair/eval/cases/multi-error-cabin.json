@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "environment": "rainy-dusk",
+  "camera": { "type": "orbit", "target": "radio", "radius": 8 },
+  "entities": [
+    {
+      "id": "floor",
+      "type": "mesh",
+      "geometry": "box",
+      "material": { "type": "standard", "color": "brown" },
+      "position": [0, 0, 0],
+      "scale": [4, 0.2, 4]
+    },
+    {
+      "id": "radio",
+      "type": "mesh",
+      "geometry": "box",
+      "material": { "type": "standard", "color": "#65503a" },
+      "position": [0, 1, -1],
+      "components": ["orbit-target", "npc-brain"]
+    }
+  ]
+}

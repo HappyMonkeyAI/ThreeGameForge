@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "environment": "sunset",
+  "camera": { "type": "orbit", "target": "crate" },
+  "entities": [
+    {
+      "id": "crate",
+      "type": "mesh",
+      "geometry": "box",
+      "material": { "type": "standard", "color": "#8b5a2b" },
+      "components": ["orbit-target", "physics-body", "keyboard-controller"]
+    }
+  ]
+}
