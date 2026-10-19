@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "meta": {
+    "source": "Mercenary4VR",
+    "ref": "src/render/scene.js createScene + BODY_RADIUS/ORBIT_ALTITUDE",
+    "note": "Scaled 1/300 blockout of planet + orbit craft. Cockpit canvas gauges, starfield Points, WebXR, streaming, and narrative are out of SceneSpec v0."
+  },
+  "environment": "night",
+  "camera": {
+    "type": "orbit",
+    "target": "planet",
+    "radius": 3.1,
+    "elevation": 0.28
+  },
+  "entities": [
+    {
+      "id": "planet",
+      "type": "mesh",
+      "geometry": "icosahedron",
+      "material": {
+        "type": "standard",
+        "color": "#2f4a45",
+        "roughness": 0.95,
+        "metalness": 0
+      },
+      "position": [0, 0, 0],
+      "scale": [2.667, 2.667, 2.667],
+      "components": ["orbit-target", "rotatable"]
+    },
+    {
+      "id": "landing-pad-a",
+      "type": "mesh",
+      "geometry": "cylinder",
+      "material": {
+        "type": "standard",
+        "color": "#9fd4c8",
+        "emissive": "#1a4038",
+        "emissiveIntensity": 0.8,
+        "roughness": 0.4,
+        "metalness": 0.2
+      },
+      "position": [0, 2.02, 0],
+      "scale": [0.32, 0.04, 0.32]
+    },
+    {
+      "id": "craft-hull",
+      "type": "mesh",
+      "geometry": "box",
+      "material": {
+        "type": "standard",
+        "color": "#182938",
+        "metalness": 0.55,
+        "roughness": 0.6
+      },
+      "position": [0, 0.15, 3.05],
+      "scale": [0.45, 0.18, 0.7]
+    },
+    {
+      "id": "craft-canopy",
+      "type": "mesh",
+      "geometry": "box",
+      "material": {
+        "type": "standard",
+        "color": "#101923",
+        "emissive": "#182c3d",
+        "emissiveIntensity": 0.65,
+        "roughness": 0.85,
+        "metalness": 0.25
+      },
+      "position": [0, 0.28, 2.85],
+      "scale": [0.38, 0.12, 0.35]
+    },
+    {
+      "id": "signal-beacon",
+      "type": "mesh",
+      "geometry": "sphere",
+      "material": {
+        "type": "standard",
+        "color": "#75d2cb",
+        "emissive": "#75d2cb",
+        "emissiveIntensity": 1.4,
+        "roughness": 0.3
+      },
+      "position": [0, 2.12, 0],
+      "scale": [0.08, 0.08, 0.08]
+    }
+  ]
+}

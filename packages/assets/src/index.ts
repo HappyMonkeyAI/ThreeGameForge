@@ -1,3 +1,5 @@
+export { createGltfLoadModel, type ModelSourceResolver } from './gltf.ts';
+
 export type AssetManifestEntry = {
   id: string;
   source: string;

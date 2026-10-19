@@ -11,6 +11,7 @@ The framework owns reusable runtime infrastructure. Games own domain rules, auth
 `renderer` · Three.js renderer and quality adapters  
 `input` · action-based input mapping  
 `camera` · reusable camera rigs  
+`scene` · closed SceneSpec vocabulary, validation, and apply  
 `world` · chunks, streaming, coordinate systems  
 `assets` · manifests, GLB loading, caching, disposal  
 `networking` · commands, snapshots, interpolation, reconciliation  

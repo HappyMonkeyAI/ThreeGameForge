@@ -16,6 +16,9 @@ export type TestHooks = {
   setState(state: string): Promise<{ state: string }> | { state: string };
   setPausedForScreenshot(paused: boolean): void;
   hideDebugUi(): void;
+  /** Optional SceneSpec readback for AI-bridge / playground verification. */
+  getSceneSpec?(): unknown;
+  getEntityIds?(): string[];
 };
 
 export function validateEvidenceManifest(manifest: EvidenceManifest): void {

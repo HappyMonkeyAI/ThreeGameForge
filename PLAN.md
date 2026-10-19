@@ -53,7 +53,13 @@
 - Use `docs/release/PUBLISHING.md` for the owner-controlled registry release
   and consumer migration sequence.
 
-## P7 — Public GitHub release readiness
+## P7 — SceneSpec agent bridge (incubation)
+
+- Closed SceneSpec validate / apply / repair (spike on `feature/ai-scene-spec-spike`).
+- Playground E2E repair + small live LLM eval; then GameForge MCP v0 (Forge tools only).
+- Pipeline MCP (ComfyUI / Blender recipes) and Unreal export are later phases; see `docs/plans/gameforge-mcp-roadmap.md`.
+
+## P8 — Public GitHub release readiness
 
 - Audit tracked files and Git history for internal hostnames, IP addresses,
   absolute workstation paths, private repository details, credentials, and

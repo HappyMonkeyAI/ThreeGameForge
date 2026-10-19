@@ -1,5 +1,17 @@
 # Patterns and Lessons
 
+## 2026-10-19 — GameForge MCP is the long-term agent surface
+
+Direction: MCP orchestrates Intent (SceneSpec) + Runtime (Forge) + Pipeline (ComfyUI/Blender recipes); Unreal is a later export consumer. See [gameforge-mcp-roadmap.md](../../docs/plans/gameforge-mcp-roadmap.md). Do MCP v0 only after playground E2E repair and a small Gemma eval set. Keep LAN endpoints in the MCP host, not in published packages.
+
+## 2026-10-19 — AI scene intent needs a closed vocabulary before Three.js
+
+LLMs fail open on raw Three.js (invented APIs, missing draw paths). A versioned `SceneSpec` with validate→structured errors→apply keeps game domain out of the framework while giving models a repairable contract. First package: `packages/scene`. Fixtures live under `fixtures/scenes/`; the playground loads the golden spec only after validation.
+
+Consumer games (FilteredLivingPainting, Mercenary4VR) contribute SceneSpec **blockout JSON** on `feature/scenespec-blockout-fixture`, copied into TGF `fixtures/scenes/consumers/`. Domain systems stay out of the schema; playground switches via `?scene=`.
+
+Repair loop: `repairSceneSpec(input, { repairer })` is host-pluggable; Forge ships `createScriptedSceneRepairer` for converge tests and `createLlmSceneRepairer({ complete })` for host LLMs (prompt + JSON extract only). `createOpenAiCompatibleComplete` talks to OpenAI-compatible servers; some Gemma builds put the answer in `reasoning_content` — `selectCompletionText` falls back. LAN demo: `npm run demo:repair-scene` (env `TGF_LLM_BASE_URL` / `TGF_LLM_MODEL`). Model entities use `type: "model"` + `model.asset` id; `applySceneSpec` is async and requires `loadModel`. Consumer GLBs stay out of the TGF tree; sibling Filtered crate is sandbox-only via Vite `/@fs/` + PROVENANCE hash check.
+
 ## 2026-10-09 — Large worlds require bounded presentation and precise evidence
 
 See [large-world lessons](codebase_insights/2026-10-09-large-world-lessons.md) for source-backed findings from the transport consumer and their applicability to the current framework. Key patterns: measure separate costs before rewriting state, keep simulation independent of visual residency, cover every active view, share render-frame build budgets, bound resource pools, and distinguish warmed performance from cold-load/hitch behavior. Framework extensions are explicitly marked as proposals; consumer-specific persistence and gameplay remain outside the framework.

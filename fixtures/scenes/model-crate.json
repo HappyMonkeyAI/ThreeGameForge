@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "meta": {
+    "source": "FilteredLivingPainting",
+    "ref": "assets/generated crate id (host-resolved)",
+    "note": "SceneSpec names the asset id only; GLB bytes and license stay in the consumer host."
+  },
+  "environment": "studio",
+  "camera": {
+    "type": "orbit",
+    "target": "crate",
+    "radius": 3,
+    "elevation": 0.4
+  },
+  "entities": [
+    {
+      "id": "plinth",
+      "type": "mesh",
+      "geometry": "cylinder",
+      "material": { "type": "standard", "color": "#6b7280", "roughness": 0.8 },
+      "position": [0, -0.35, 0],
+      "scale": [2.2, 0.2, 2.2]
+    },
+    {
+      "id": "crate",
+      "type": "model",
+      "model": { "asset": "crate-pixal3d" },
+      "position": [0, 0.2, 0],
+      "components": ["orbit-target", "rotatable"]
+    }
+  ]
+}

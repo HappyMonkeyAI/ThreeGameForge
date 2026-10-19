@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "environment": "night",
+  "camera": { "type": "orbit" },
+  "entities": [
+    {
+      "id": "broken",
+      "type": "mesh",
+      "geometry": "torus-knot",
+      "material": { "type": "standard", "color": "#00ff00" }
+    }
+  ]
+}

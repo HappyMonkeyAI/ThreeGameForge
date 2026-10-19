@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "meta": {
+    "source": "FilteredLivingPainting",
+    "ref": "src/scenes/WrenCamp.ts layout good-smoke",
+    "note": "Primitive blockout of cabin shell, hearth, radio bench, and dog. Director, rain, toon, GLB crates, and PointLights are out of SceneSpec v0."
+  },
+  "environment": "night",
+  "camera": {
+    "type": "orbit",
+    "target": "radio",
+    "radius": 11,
+    "elevation": 0.22
+  },
+  "entities": [
+    {
+      "id": "floor",
+      "type": "mesh",
+      "geometry": "box",
+      "material": { "type": "standard", "color": "#39312a", "roughness": 0.98 },
+      "position": [0, -0.18, -0.2],
+      "scale": [14, 0.36, 11]
+    },
+    {
+      "id": "wall-back",
+      "type": "mesh",
+      "geometry": "box",
+      "material": { "type": "standard", "color": "#584332", "roughness": 0.94 },
+      "position": [0, 2.9, -5.45],
+      "scale": [14, 5.8, 0.3]
+    },
+    {
+      "id": "wall-left",
+      "type": "mesh",
+      "geometry": "box",
+      "material": { "type": "standard", "color": "#584332", "roughness": 0.94 },
+      "position": [-6.85, 2.9, -0.15],
+      "scale": [0.3, 5.8, 10.3]
+    },
+    {
+      "id": "wall-right",
+      "type": "mesh",
+      "geometry": "box",
+      "material": { "type": "standard", "color": "#584332", "roughness": 0.94 },
+      "position": [6.85, 2.9, -0.15],
+      "scale": [0.3, 5.8, 10.3]
+    },
+    {
+      "id": "window",
+      "type": "mesh",
+      "geometry": "box",
+      "material": {
+        "type": "standard",
+        "color": "#2d4b5a",
+        "emissive": "#1b3b50",
+        "emissiveIntensity": 1.25,
+        "roughness": 0.7
+      },
+      "position": [3.75, 3.2, -5.22],
+      "scale": [3.7, 2.55, 0.06]
+    },
+    {
+      "id": "hearth",
+      "type": "mesh",
+      "geometry": "box",
+      "material": { "type": "standard", "color": "#45413c", "roughness": 1 },
+      "position": [-4.45, 0.7, -3.35],
+      "scale": [3.25, 1.35, 1.05]
+    },
+    {
+      "id": "fire",
+      "type": "mesh",
+      "geometry": "sphere",
+      "material": {
+        "type": "standard",
+        "color": "#ff8a37",
+        "emissive": "#c34612",
+        "emissiveIntensity": 2.2,
+        "roughness": 0.55
+      },
+      "position": [-4.45, 0.97, -2.55],
+      "scale": [0.33, 0.72, 0.16],
+      "components": ["rotatable"]
+    },
+    {
+      "id": "bench",
+      "type": "mesh",
+      "geometry": "box",
+      "material": { "type": "standard", "color": "#584332", "roughness": 0.94 },
+      "position": [-0.55, 1.0, -3.55],
+      "scale": [4.2, 0.18, 1.05]
+    },
+    {
+      "id": "radio",
+      "type": "mesh",
+      "geometry": "box",
+      "material": {
+        "type": "standard",
+        "color": "#65503a",
+        "emissive": "#1b1107",
+        "emissiveIntensity": 0.5,
+        "roughness": 0.8
+      },
+      "position": [-0.45, 1.82, -3.8],
+      "scale": [2.55, 1.52, 1.0],
+      "components": ["orbit-target"]
+    },
+    {
+      "id": "dog",
+      "type": "mesh",
+      "geometry": "sphere",
+      "material": {
+        "type": "standard",
+        "color": "#55524c",
+        "emissive": "#22201c",
+        "emissiveIntensity": 0.45,
+        "roughness": 1
+      },
+      "position": [2.1, 0.55, -1.4],
+      "scale": [0.55, 0.35, 0.85]
+    }
+  ]
+}

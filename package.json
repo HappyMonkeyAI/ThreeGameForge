@@ -14,7 +14,8 @@
     "audit:consumers": "node scripts/audit-consumers.mjs",
     "audit:consumers:strict": "node scripts/audit-consumers.mjs --strict",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test tests/runtime.test.ts"
+    "demo:repair-scene": "tsx scripts/repair-scene-local.mts",
+    "test": "tsx --test tests/runtime.test.ts tests/scene.test.ts tests/scene-consumers.test.ts tests/scene-repair.test.ts tests/scene-model.test.ts tests/scene-llm-repair.test.ts tests/sibling-crate-hash.test.ts tests/assets-gltf.test.ts tests/openai-complete.test.ts"
   },
   "dependencies": {
     "three": "^0.170.0"

@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "environment": "dusk",
+  "camera": {
+    "type": "orbit",
+    "target": "missing-player",
+    "radius": 5
+  },
+  "entities": [
+    {
+      "id": "box",
+      "type": "mesh",
+      "geometry": "box",
+      "material": { "type": "standard", "color": "#ff4500" }
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "environment": "night",
+  "camera": {
+    "type": "orbit",
+    "target": "forge",
+    "radius": 6,
+    "elevation": 0.28
+  },
+  "entities": [
+    {
+      "id": "platform",
+      "type": "mesh",
+      "geometry": "cylinder",
+      "material": {
+        "type": "standard",
+        "color": "#263c59",
+        "metalness": 0.35,
+        "roughness": 0.6
+      },
+      "position": [0, -0.15, 0],
+      "scale": [4.8, 0.25, 4.8]
+    },
+    {
+      "id": "forge",
+      "type": "mesh",
+      "geometry": "icosahedron",
+      "material": {
+        "type": "standard",
+        "color": "#4ee6c1",
+        "roughness": 0.3,
+        "emissive": "#103d3a",
+        "emissiveIntensity": 1.5
+      },
+      "position": [0, 1, 0],
+      "components": ["rotatable", "orbit-target"]
+    }
+  ]
+}
