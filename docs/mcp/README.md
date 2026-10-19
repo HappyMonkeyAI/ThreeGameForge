@@ -14,6 +14,8 @@ stdio MCP server exposing SceneSpec tools so agents can validate, repair, and ap
 | `get_diagnostics` | Session + last errors |
 | `clear_scene` | Reset session |
 | `screenshot` | Returns error in v0 (use playground) |
+| `list_pipeline_recipes` | MCP v1 catalog (named recipes only) |
+| `get_pipeline_host_status` | Read-only ComfyUI `/system_stats` when `TGF_COMFYUI_BASE_URL` set |
 
 ## Run
 
@@ -30,22 +32,37 @@ Cursor / Claude MCP config example:
 {
   "mcpServers": {
     "gameforge": {
-      "command": "npx",
-      "args": ["tsx", "packages/mcp/src/index.ts"],
-      "cwd": "C:/Users/steph/Documents/development/ThreeGameForge",
+      "command": "npm",
+      "args": [
+        "--prefix",
+        "C:/Users/steph/Documents/development/ThreeGameForge",
+        "run",
+        "mcp"
+      ],
       "env": {
         "TGF_LLM_BASE_URL": "http://192.168.5.229:1234/v1",
-        "TGF_LLM_MODEL": "google/gemma-4-e2b"
+        "TGF_LLM_MODEL": "google/gemma-4-e2b",
+        "TGF_COMFYUI_BASE_URL": "http://192.168.5.157:8188",
+        "TGF_PIPELINE_REF_ROOT": "C:/Users/steph/Documents/development/threejs-pipeline"
       }
     }
   }
 }
 ```
 
+Use `npm --prefix <repo>` (absolute path) — Cursor may spawn MCP with a non-repo cwd, so relative `packages/mcp/...` + `cwd` fails (`Cannot find module ...\packages\mcp\src\index.ts`).
+
 LLM env vars are only required for `repair_scene_spec` with `mode: "llm"`. Scripted repair needs no network.
 
-## Non-goals (v0)
+## Live evidence
 
-- ComfyUI / Blender / Unreal
-- Browser screenshot / WebGL presentation
+2026-10-19 Cursor `user-gameforge`: `get_scene_vocabulary` → validate/repair `realmfront-r0-broken.json` (scripted, 2 attempts) → `apply_scene_spec` on `realmfront-r0-blockout.json` → readback 15 entity ids / objectCount 17; `screenshot` correctly errors in v0.
+
+Pipeline design: [v1-pipeline.md](./v1-pipeline.md).
+
+## Non-goals (v0 / v1 incubation)
+
+- Arbitrary Comfy/Blender script execution
+- Browser screenshot / WebGL presentation in MCP
 - Publishing LAN defaults inside `@happymonkeyai/scene`
+- Committing uncleared generated GLBs

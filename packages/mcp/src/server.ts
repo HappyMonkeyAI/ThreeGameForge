@@ -1,5 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
+import { listPipelineRecipes } from './pipeline/catalog.ts';
+import { getComfyHostStatus } from './pipeline/comfyStatus.ts';
 import { GameForgeSession, type RepairMode } from './session.ts';
 
 function ok(value: unknown) {
@@ -18,11 +20,19 @@ function fail(message: string) {
 
 const specInput = z.unknown();
 
-/** GameForge MCP v0: SceneSpec tools only (no ComfyUI / Blender / browser screenshot). */
-export function createGameForgeMcpServer(session: GameForgeSession = new GameForgeSession()): McpServer {
+export type GameForgeMcpHostEnv = {
+  comfyBaseUrl?: string;
+  pipelineRefRoot?: string;
+};
+
+/** GameForge MCP: SceneSpec tools (v0) + pipeline catalog/status (v1 incubation). */
+export function createGameForgeMcpServer(
+  session: GameForgeSession = new GameForgeSession(),
+  host: GameForgeMcpHostEnv = {},
+): McpServer {
   const server = new McpServer({
     name: 'gameforge',
-    version: '0.1.0',
+    version: '0.1.1',
   });
 
   server.registerTool(
@@ -127,6 +137,26 @@ export function createGameForgeMcpServer(session: GameForgeSession = new GameFor
       inputSchema: {},
     },
     async () => fail('screenshot is not available in GameForge MCP v0 (headless). Use the playground for visuals.'),
+  );
+
+  server.registerTool(
+    'list_pipeline_recipes',
+    {
+      description:
+        'Return the closed MCP v1 asset-pipeline recipe catalog (named recipes only; no raw Comfy graph submission).',
+      inputSchema: {},
+    },
+    async () => ok(listPipelineRecipes(host.pipelineRefRoot)),
+  );
+
+  server.registerTool(
+    'get_pipeline_host_status',
+    {
+      description:
+        'Read-only ComfyUI /system_stats probe using TGF_COMFYUI_BASE_URL. Never clears or cancels the queue.',
+      inputSchema: {},
+    },
+    async () => ok(await getComfyHostStatus(host.comfyBaseUrl)),
   );
 
   return server;

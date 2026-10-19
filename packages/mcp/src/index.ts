@@ -15,6 +15,9 @@ const session = new GameForgeSession({
   },
 });
 
-const server = createGameForgeMcpServer(session);
+const server = createGameForgeMcpServer(session, {
+  comfyBaseUrl: readEnv('TGF_COMFYUI_BASE_URL'),
+  pipelineRefRoot: readEnv('TGF_PIPELINE_REF_ROOT'),
+});
 const transport = new StdioServerTransport();
 await server.connect(transport);

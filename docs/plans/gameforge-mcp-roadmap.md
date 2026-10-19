@@ -51,7 +51,9 @@ Export/admit cleaned assets into Unreal as a **consumer**, not the primary MCP s
 2. ~~Small live repair eval set against `google/gemma-4-e2b` (LAN).~~ `npm run eval:repair-scene` — 10/10 PASS (~180s) on 2026-10-19.
 3. ~~Commit `feature/ai-scene-spec-spike` when the owner requests it.~~ Committed/pushed; playground E2E follow-up on same branch.
 4. ~~GameForge MCP v0 (Forge tools only).~~ `packages/mcp` + `npm run mcp` (2026-10-19).
-5. Next: MCP v1 asset pipeline recipes, when authorized.
+5. ~~Live Cursor MCP exercise: realmfront R0 broken → scripted repair → apply full blockout → readback (15 entities, objectCount 17).~~ 2026-10-19 via `user-gameforge`.
+6. MCP v1 incubation: `list_pipeline_recipes` + `get_pipeline_host_status` + [docs/mcp/v1-pipeline.md](../mcp/v1-pipeline.md) (2026-10-19). Queue/poll/register still planned.
+7. Next: wire `queue_*` / `poll_job` / `register_asset` against host ComfyUI (no foreign queue clears).
 
 ## Non-goals
 
