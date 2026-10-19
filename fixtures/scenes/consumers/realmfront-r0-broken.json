@@ -3,7 +3,7 @@
   "meta": {
     "source": "realmfront-rts",
     "ref": "intentional invalid SceneSpec for MCP repair smoke",
-    "note": "Bad environment + named colour + invented geometry; scripted repair should recover."
+    "note": "Bad environment + named colour + unknown component; scripted repair should recover (invented geometry needs LLM)."
   },
   "environment": "daylight",
   "camera": {
@@ -19,12 +19,12 @@
       "material": { "type": "standard", "color": "green" },
       "position": [0, 0, 0],
       "scale": [32, 0.5, 32],
-      "components": ["orbit-target"]
+      "components": ["orbit-target", "fly-around"]
     },
     {
       "id": "blue-hq",
       "type": "mesh",
-      "geometry": "pyramid",
+      "geometry": "box",
       "material": { "type": "standard", "color": "#508ddb" },
       "position": [-10, 1, 10],
       "scale": [3, 2, 3]

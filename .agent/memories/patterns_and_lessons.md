@@ -2,7 +2,7 @@
 
 ## 2026-10-19 — GameForge MCP is the long-term agent surface
 
-Direction: MCP orchestrates Intent (SceneSpec) + Runtime (Forge) + Pipeline (ComfyUI/Blender recipes); Unreal is a later export consumer. See [gameforge-mcp-roadmap.md](../../docs/plans/gameforge-mcp-roadmap.md). MCP v0 is `@happymonkeyai/gameforge-mcp` (`npm run mcp`): vocabulary, validate, repair (scripted|llm), apply, readback, diagnostics, clear; screenshot deferred. Keep LAN LLM endpoints in MCP host env, not in `@happymonkeyai/scene`.
+Direction: MCP orchestrates Intent (SceneSpec) + Runtime (Forge) + Pipeline (ComfyUI/Blender recipes); Unreal is a later export consumer. See [gameforge-mcp-roadmap.md](../../docs/plans/gameforge-mcp-roadmap.md). MCP v0 is `@happymonkeyai/gameforge-mcp` (`npm run mcp`): vocabulary, validate, repair (scripted|llm), apply, readback, diagnostics, clear; screenshot deferred. Keep LAN LLM endpoints in MCP host env, not in `@happymonkeyai/scene`. Smoke: `npm run smoke:mcp` with realmfront R0 fixtures; Cursor MCP `gameforge` in `~/.cursor/mcp.json` + `.cursor/mcp.json` (cwd ThreeGameForge). Scripted repair does not invent geometries — use LLM mode or closed-vocab fixtures.
 
 ## 2026-10-19 — AI scene intent needs a closed vocabulary before Three.js
 
