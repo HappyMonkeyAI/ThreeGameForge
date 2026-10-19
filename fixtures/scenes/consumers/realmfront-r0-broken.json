@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "meta": {
+    "source": "realmfront-rts",
+    "ref": "intentional invalid SceneSpec for MCP repair smoke",
+    "note": "Bad environment + named colour + invented geometry; scripted repair should recover."
+  },
+  "environment": "daylight",
+  "camera": {
+    "type": "orbit",
+    "target": "arena",
+    "radius": 40
+  },
+  "entities": [
+    {
+      "id": "arena",
+      "type": "mesh",
+      "geometry": "box",
+      "material": { "type": "standard", "color": "green" },
+      "position": [0, 0, 0],
+      "scale": [32, 0.5, 32],
+      "components": ["orbit-target"]
+    },
+    {
+      "id": "blue-hq",
+      "type": "mesh",
+      "geometry": "pyramid",
+      "material": { "type": "standard", "color": "#508ddb" },
+      "position": [-10, 1, 10],
+      "scale": [3, 2, 3]
+    }
+  ]
+}

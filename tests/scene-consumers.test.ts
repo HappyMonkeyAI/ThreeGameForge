@@ -55,3 +55,21 @@ test('Mercenary4VR orbit blockout validates and applies', async () => {
   assert.ok(Math.abs(applied.cameraRadius - 3.1) < 1e-9);
   applied.dispose();
 });
+
+test('realmfront R0 blockout validates and applies', async () => {
+  const input = await loadConsumer('realmfront-r0-blockout.json');
+  const validated = validateSceneSpec(input);
+  assert.equal(validated.ok, true);
+  if (!validated.ok) return;
+  assert.equal(validated.spec.meta?.source, 'realmfront-rts');
+  assert.ok(validated.spec.entities.length >= 10);
+
+  const scene = new THREE.Scene();
+  const applied = await applySceneSpec(scene, validated.spec);
+  assert.ok(applied.entities.get('arena'));
+  assert.ok(applied.entities.get('blue-hq'));
+  assert.ok(applied.entities.get('red-hq'));
+  assert.deepEqual([...applied.rotatableIds], []);
+  assert.ok(Math.abs(applied.cameraRadius - 53) < 1e-9);
+  applied.dispose();
+});

@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "meta": {
+    "source": "realmfront-rts",
+    "ref": "src/main.ts arena + building()/units (R0)",
+    "note": "Simplified SceneSpec blockout of the 32×32 RTS arena. Cones/dodecahedra/grid/selection UI map to closed vocabulary meshes only; gameplay, picking, and hut preview are out of SceneSpec v0."
+  },
+  "environment": "studio",
+  "camera": {
+    "type": "orbit",
+    "target": "arena",
+    "radius": 53,
+    "elevation": 0.91
+  },
+  "entities": [
+    {
+      "id": "arena",
+      "type": "mesh",
+      "geometry": "box",
+      "material": { "type": "standard", "color": "#7c9b6b", "roughness": 0.9 },
+      "position": [0, -0.25, 0],
+      "scale": [32, 0.5, 32],
+      "components": ["orbit-target"]
+    },
+    {
+      "id": "arena-skirt",
+      "type": "mesh",
+      "geometry": "box",
+      "material": { "type": "standard", "color": "#667467", "roughness": 0.95 },
+      "position": [0, -0.6, 0],
+      "scale": [33, 0.3, 33]
+    },
+    {
+      "id": "blue-hq",
+      "type": "mesh",
+      "geometry": "box",
+      "material": { "type": "standard", "color": "#508ddb", "roughness": 0.85 },
+      "position": [-10, 1.1, 10],
+      "scale": [3.1, 2.2, 3.1]
+    },
+    {
+      "id": "blue-hut",
+      "type": "mesh",
+      "geometry": "box",
+      "material": { "type": "standard", "color": "#508ddb", "roughness": 0.85 },
+      "position": [-5, 0.7, 11],
+      "scale": [1.6, 1.4, 1.6]
+    },
+    {
+      "id": "blue-barracks",
+      "type": "mesh",
+      "geometry": "box",
+      "material": { "type": "standard", "color": "#508ddb", "roughness": 0.85 },
+      "position": [-11, 0.85, 4],
+      "scale": [2.3, 1.7, 2.3]
+    },
+    {
+      "id": "red-hq",
+      "type": "mesh",
+      "geometry": "box",
+      "material": { "type": "standard", "color": "#d98259", "roughness": 0.85 },
+      "position": [10, 1.1, -10],
+      "scale": [3.1, 2.2, 3.1]
+    },
+    {
+      "id": "red-hut",
+      "type": "mesh",
+      "geometry": "box",
+      "material": { "type": "standard", "color": "#d98259", "roughness": 0.85 },
+      "position": [5, 0.7, -11],
+      "scale": [1.6, 1.4, 1.6]
+    },
+    {
+      "id": "red-barracks",
+      "type": "mesh",
+      "geometry": "box",
+      "material": { "type": "standard", "color": "#d98259", "roughness": 0.85 },
+      "position": [11, 0.85, -4],
+      "scale": [2.3, 1.7, 2.3]
+    },
+    {
+      "id": "blue-1",
+      "type": "mesh",
+      "geometry": "cylinder",
+      "material": { "type": "standard", "color": "#508ddb", "roughness": 0.9 },
+      "position": [-4, 0.5, 5],
+      "scale": [0.45, 0.65, 0.45]
+    },
+    {
+      "id": "blue-2",
+      "type": "mesh",
+      "geometry": "cylinder",
+      "material": { "type": "standard", "color": "#508ddb", "roughness": 0.9 },
+      "position": [-5.7, 0.5, 5],
+      "scale": [0.45, 0.65, 0.45]
+    },
+    {
+      "id": "blue-5",
+      "type": "mesh",
+      "geometry": "cylinder",
+      "material": { "type": "standard", "color": "#508ddb", "roughness": 0.9 },
+      "position": [-4, 0.5, 6.8],
+      "scale": [0.5, 0.7, 0.5]
+    },
+    {
+      "id": "red-1",
+      "type": "mesh",
+      "geometry": "cylinder",
+      "material": { "type": "standard", "color": "#d98259", "roughness": 0.9 },
+      "position": [4, 0.5, -5],
+      "scale": [0.45, 0.65, 0.45]
+    },
+    {
+      "id": "red-5",
+      "type": "mesh",
+      "geometry": "cylinder",
+      "material": { "type": "standard", "color": "#d98259", "roughness": 0.9 },
+      "position": [4, 0.5, -6.8],
+      "scale": [0.5, 0.7, 0.5]
+    },
+    {
+      "id": "trees-a",
+      "type": "mesh",
+      "geometry": "cylinder",
+      "material": { "type": "standard", "color": "#416c48", "roughness": 0.95 },
+      "position": [-2, 1.2, 1],
+      "scale": [1.2, 2.4, 1.2]
+    },
+    {
+      "id": "ore-a",
+      "type": "mesh",
+      "geometry": "icosahedron",
+      "material": { "type": "standard", "color": "#a3aba6", "roughness": 0.8, "metalness": 0.15 },
+      "position": [4, 0.4, 3],
+      "scale": [0.7, 0.7, 0.7]
+    }
+  ]
+}

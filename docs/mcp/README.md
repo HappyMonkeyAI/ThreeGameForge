@@ -19,7 +19,10 @@ stdio MCP server exposing SceneSpec tools so agents can validate, repair, and ap
 
 ```powershell
 npm run mcp
+npm run smoke:mcp
 ```
+
+`smoke:mcp` exercises vocabulary → validate/apply realmfront R0 blockout → scripted repair of the broken twin → readback (headless; no Cursor required).
 
 Cursor / Claude MCP config example:
 

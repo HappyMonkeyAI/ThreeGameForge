@@ -6,6 +6,8 @@ Copied blockouts from sibling projects. Source of truth for layout intent lives 
 | --- | --- |
 | `filtered-wren-camp-blockout.json` | `FilteredLivingPainting-scenespec` worktree, branch `feature/scenespec-blockout-fixture` → `fixtures/scenespec/wren-camp-good-smoke.scenespec.json` |
 | `mercenary-orbit-blockout.json` | `Mercenary4VR` branch `feature/scenespec-blockout-fixture` → `fixtures/scenespec/orbit-blockout.scenespec.json` |
+| `realmfront-r0-blockout.json` | `realmfront-rts` R0 `src/main.ts` arena/buildings/units (simplified closed-vocab meshes) |
+| `realmfront-r0-broken.json` | Intentional invalid twin for MCP repair smoke (`npm run smoke:mcp`) |
 
 FilteredLivingPainting keeps FP-037 WIP on `fp-037-local-asset-pipeline-test` in the main checkout; SceneSpec fixtures live only in the sibling worktree so they stay separate.
 
