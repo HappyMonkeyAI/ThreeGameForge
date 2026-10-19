@@ -2,7 +2,7 @@
 
 ## 2026-10-19 — GameForge MCP is the long-term agent surface
 
-Direction: MCP orchestrates Intent (SceneSpec) + Runtime (Forge) + Pipeline (ComfyUI/Blender recipes); Unreal is a later export consumer. See [gameforge-mcp-roadmap.md](../../docs/plans/gameforge-mcp-roadmap.md). Do MCP v0 only after playground E2E repair and a small Gemma eval set. Keep LAN endpoints in the MCP host, not in published packages.
+Direction: MCP orchestrates Intent (SceneSpec) + Runtime (Forge) + Pipeline (ComfyUI/Blender recipes); Unreal is a later export consumer. See [gameforge-mcp-roadmap.md](../../docs/plans/gameforge-mcp-roadmap.md). MCP v0 is `@happymonkeyai/gameforge-mcp` (`npm run mcp`): vocabulary, validate, repair (scripted|llm), apply, readback, diagnostics, clear; screenshot deferred. Keep LAN LLM endpoints in MCP host env, not in `@happymonkeyai/scene`.
 
 ## 2026-10-19 — AI scene intent needs a closed vocabulary before Three.js
 

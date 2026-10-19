@@ -1,6 +1,6 @@
 # GameForge MCP roadmap
 
-Status: direction accepted 2026-10-19 (planning only; not an implementation authorization).
+Status: direction accepted 2026-10-19; MCP v0 implemented on `feature/ai-scene-spec-spike` (see `docs/mcp/README.md`).
 
 ## Thesis
 
@@ -50,7 +50,8 @@ Export/admit cleaned assets into Unreal as a **consumer**, not the primary MCP s
 1. ~~Playground E2E: broken JSON → repair (local LLM) → apply → canvas readback.~~ Done via `?mode=repair` panel + Vite `/llm` proxy (2026-10-19).
 2. ~~Small live repair eval set against `google/gemma-4-e2b` (LAN).~~ `npm run eval:repair-scene` — 10/10 PASS (~180s) on 2026-10-19.
 3. ~~Commit `feature/ai-scene-spec-spike` when the owner requests it.~~ Committed/pushed; playground E2E follow-up on same branch.
-4. Next: GameForge MCP v0 (Forge tools only), when authorized.
+4. ~~GameForge MCP v0 (Forge tools only).~~ `packages/mcp` + `npm run mcp` (2026-10-19).
+5. Next: MCP v1 asset pipeline recipes, when authorized.
 
 ## Non-goals
 

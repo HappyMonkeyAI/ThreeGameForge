@@ -12,6 +12,7 @@ The framework owns reusable runtime infrastructure. Games own domain rules, auth
 `input` · action-based input mapping  
 `camera` · reusable camera rigs  
 `scene` · closed SceneSpec vocabulary, validation, and apply  
+`mcp` · GameForge MCP v0 stdio tools over SceneSpec sessions  
 `world` · chunks, streaming, coordinate systems  
 `assets` · manifests, GLB loading, caching, disposal  
 `networking` · commands, snapshots, interpolation, reconciliation  

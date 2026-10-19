@@ -56,7 +56,8 @@
 ## P7 — SceneSpec agent bridge (incubation)
 
 - Closed SceneSpec validate / apply / repair (spike on `feature/ai-scene-spec-spike`).
-- Playground E2E repair + small live LLM eval; then GameForge MCP v0 (Forge tools only).
+- Playground E2E repair + small live LLM eval.
+- GameForge MCP v0 (`packages/mcp`, `npm run mcp`) — Forge SceneSpec tools only.
 - Pipeline MCP (ComfyUI / Blender recipes) and Unreal export are later phases; see `docs/plans/gameforge-mcp-roadmap.md`.
 
 ## P8 — Public GitHub release readiness
