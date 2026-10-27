@@ -352,6 +352,21 @@ test('SeededRandom and EventBus are deterministic and unsubscribable', () => {
   assert.equal(calls, 1);
 });
 
+test('SeededRandom sequence is pinned (changing it breaks every consumer seed)', () => {
+  const numeric = new SeededRandom(42);
+  assert.deepEqual([numeric.next(), numeric.next(), numeric.next(), numeric.next()],
+    [0.6484007823746651, 0.3632245766930282, 0.7661763997748494, 0.9465068783611059]);
+  const text = new SeededRandom('aion');
+  assert.deepEqual([text.next(), text.next()], [0.39156670751981437, 0.6688260124064982]);
+  const dice = new SeededRandom(1);
+  for (let i = 0; i < 1000; i += 1) {
+    const roll = dice.integer(1, 6);
+    assert.ok(roll >= 1 && roll <= 6 && Number.isInteger(roll));
+  }
+  assert.throws(() => dice.integer(0.5, 2), /integers/);
+  assert.throws(() => dice.integer(3, 2), />= minimum/);
+});
+
 test('EventBus isolates throwing handlers and drops empty listener sets', () => {
   type Events = { tick: number };
   const bus = new EventBus<Events>();
