@@ -1,7 +1,10 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-const root = resolve(process.cwd(), '..', '..');
+// Consumers are siblings of the framework checkout; resolve from this script, not the caller's cwd.
+const root = process.env.FORGE_CONSUMERS_ROOT
+  ? resolve(process.env.FORGE_CONSUMERS_ROOT)
+  : resolve(import.meta.dirname, '..', '..');
 const strict = process.argv.includes('--strict');
 const consumers = {
   echoes: resolve(root, 'EchoesOfAion'),
@@ -14,7 +17,8 @@ const checks = [
   ['echoes', 'packages/client/app.js', ['THREE', 'gameState']],
   ['mrpg', 'docs/adr/0001-hybrid-threejs-realm.md', ['Three.js', 'Socket.IO authority']],
   ['mrpg', 'shared/protocol.ts', ['MovementSnapshot', 'worldSeed']],
-  ['mrpg', 'client/src/main.ts', ['socket.io-client', 'shouldReconcileAuthoritativePosition']],
+  // MRPG replaced shouldReconcileAuthoritativePosition with reconcileSelf (see its PROGRESS.md).
+  ['mrpg', 'client/src/main.ts', ['socket.io-client', 'reconcileSelf']],
 ];
 
 let failures = 0;

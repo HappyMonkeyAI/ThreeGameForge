@@ -22,14 +22,15 @@ export class FloatingOrigin {
 
   constructor(options: FloatingOriginOptions = {}) { this.threshold = options.threshold ?? 1000; }
 
-  recenter(position: ChunkCoord): ChunkCoord {
-    const shouldRecenter = Math.max(Math.abs(position.x), Math.abs(position.y), Math.abs(position.z)) >= this.threshold;
-    if (shouldRecenter) {
-      this.offset.x += position.x;
-      this.offset.y += position.y;
-      this.offset.z += position.z;
+  /** Moves the origin to `worldPosition` once its render-space distance reaches the threshold. */
+  recenter(worldPosition: ChunkCoord): ChunkCoord {
+    const local = this.toRender(worldPosition);
+    if (Math.max(Math.abs(local.x), Math.abs(local.y), Math.abs(local.z)) >= this.threshold) {
+      this.offset.x = worldPosition.x;
+      this.offset.y = worldPosition.y;
+      this.offset.z = worldPosition.z;
     }
-    return { x: position.x - this.offset.x, y: position.y - this.offset.y, z: position.z - this.offset.z };
+    return this.toRender(worldPosition);
   }
 
   toRender(worldPosition: ChunkCoord): ChunkCoord {
@@ -40,11 +41,16 @@ export class FloatingOrigin {
 /** Tracks bounded chunk residency without coupling generation to rendering. */
 export class ChunkResidency {
   private readonly loaded = new Map<string, ChunkCoord>();
+  private lastCenterKey?: string;
   readonly radius: number;
 
   constructor(radius: number) { this.radius = radius; }
 
   update(center: ChunkCoord): { load: ChunkCoord[]; unload: ChunkCoord[] } {
+    // Typically called every frame; the (2r+1)^3 neighborhood only changes with the center.
+    const centerKey = chunkKey(center);
+    if (centerKey === this.lastCenterKey) return { load: [], unload: [] };
+    this.lastCenterKey = centerKey;
     const desired = new Map<string, ChunkCoord>();
     for (let x = center.x - this.radius; x <= center.x + this.radius; x += 1) {
       for (let y = center.y - this.radius; y <= center.y + this.radius; y += 1) {
@@ -79,17 +85,21 @@ export class DirtyChunkQueue {
 
   markDirty(coord: ChunkCoord, revision: number): void {
     const key = chunkKey(coord);
+    // A late request for a revision older than what is already built must not regress it.
+    const built = this.committed.get(key);
+    if (built && revision < built.revision) return;
     const current = this.pending.get(key);
     if (!current || revision >= current.revision) this.pending.set(key, { coord, revision });
   }
 
   process(maxChunks: number, generator: ChunkGenerator): ChunkPayload[] {
     const committed: ChunkPayload[] = [];
-    const entries = [...this.pending.values()].slice(0, Math.max(0, maxChunks));
-    for (const dirty of entries) {
+    const limit = Math.max(0, maxChunks);
+    for (const [key, dirty] of this.pending) {
+      if (committed.length >= limit) break;
       const payload = generateChunk(dirty.coord, dirty.revision, generator);
       this.committed.set(chunkKey(payload.coord), payload);
-      this.pending.delete(chunkKey(dirty.coord));
+      this.pending.delete(key);
       committed.push(payload);
     }
     return committed;

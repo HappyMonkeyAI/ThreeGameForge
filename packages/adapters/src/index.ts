@@ -1,4 +1,5 @@
-import type { NetworkCommand, NetworkSnapshot } from '../../networking/src/index.ts';
+// Import through the declared package dependency so emitted declarations resolve for npm consumers.
+import type { NetworkCommand, NetworkSnapshot } from '@happymonkeyai/networking';
 
 export type GameAdapter<State> = {
   id: string;

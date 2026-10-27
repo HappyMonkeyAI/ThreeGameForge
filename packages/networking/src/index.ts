@@ -19,6 +19,8 @@ export type ReconciliationResult<T> = {
   state: T;
   acknowledged: number;
   correction: number;
+  /** False when the snapshot was older than one already reconciled and was ignored. */
+  applied: boolean;
 };
 
 /** Maintains an authoritative baseline and replays only unacknowledged commands. */
@@ -29,6 +31,9 @@ export class PredictionClient<T> {
   private readonly clone: (state: T) => T;
   private readonly apply: (state: T, command: NetworkCommand) => T;
   private readonly measureCorrection: (before: T, after: T) => number;
+  private lastSequence = Number.NEGATIVE_INFINITY;
+  private lastSnapshotTick = Number.NEGATIVE_INFINITY;
+  private lastAcknowledged = Number.NEGATIVE_INFINITY;
 
   constructor(initial: T, options: PredictionOptions<T>) {
     this.clone = options.clone;
@@ -39,12 +44,23 @@ export class PredictionClient<T> {
   }
 
   queue(command: NetworkCommand): T {
+    // A reused sequence would be predicted twice but replayed once, diverging from the server.
+    if (command.sequence <= this.lastSequence) {
+      throw new RangeError(`Command sequence must increase: ${command.sequence} <= ${this.lastSequence}`);
+    }
+    this.lastSequence = command.sequence;
     this.pending.set(command.sequence, command);
     this.predicted = this.apply(this.predicted, command);
     return this.clone(this.predicted);
   }
 
   reconcile(snapshot: NetworkSnapshot<T>, lastAcknowledgedSequence: number): ReconciliationResult<T> {
+    // Late or reordered packets must not roll prediction back to an older authority.
+    if (snapshot.tick < this.lastSnapshotTick || lastAcknowledgedSequence < this.lastAcknowledged) {
+      return { state: this.clone(this.predicted), acknowledged: this.lastAcknowledged, correction: 0, applied: false };
+    }
+    this.lastSnapshotTick = snapshot.tick;
+    this.lastAcknowledged = lastAcknowledgedSequence;
     const before = this.predicted;
     this.authoritative = this.clone(snapshot.state);
     for (const sequence of this.pending.keys()) {
@@ -58,6 +74,7 @@ export class PredictionClient<T> {
       state: this.clone(this.predicted),
       acknowledged: lastAcknowledgedSequence,
       correction: this.measureCorrection(before, this.predicted),
+      applied: true,
     };
   }
 

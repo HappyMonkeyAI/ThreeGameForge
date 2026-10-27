@@ -54,9 +54,17 @@ export class AssetRegistry<T> {
 
   async release(id: string): Promise<void> {
     if (this.disposed.has(id)) return;
-    const asset = this.cache.get(id);
-    if (asset) this.dispose(await asset);
-    this.cache.delete(id);
+    // Claim the release before awaiting so concurrent callers cannot dispose twice.
     this.disposed.add(id);
+    const pending = this.cache.get(id);
+    this.cache.delete(id);
+    if (!pending) return;
+    let asset: T;
+    try {
+      asset = await pending;
+    } catch {
+      return; // A failed load produced nothing to dispose.
+    }
+    this.dispose(asset);
   }
 }
