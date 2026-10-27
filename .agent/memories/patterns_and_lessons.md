@@ -8,9 +8,17 @@ See [large-world lessons](codebase_insights/2026-10-09-large-world-lessons.md) f
 
 The first extracted package contains only fixed-step timing and render scheduling. It has no Three.js or game-domain dependency, which keeps deterministic tests and future consumer adapters straightforward. Extract more services only when a second consumer proves the boundary.
 
-## 2026-09-08 — Resolve sibling consumers from the repository layout
+## 2026-10-27 — Frame-interval budgets must tolerate vsync jitter
 
-`ThreeGameForge` lives under `development/games`, while `EchoesOfAion` and `MRPGRealms` live directly under `development`. Read-only audits must resolve two parent levels from the framework root. The audit was corrected and now passes all six declared contract checks.
+Once `RuntimeDiagnostics` reported real frame intervals, a healthy 60 Hz playground dropped to `medium`: 161 of 300 rAF intervals landed just over the 16.7 ms `high` budget. `QualityController` now decides on a rolling mean with a tolerance, and treats upgrades as probes with a cooldown that backs off, because a vsync-capped display cannot show headroom. Browser readback: holds `high` at 60 Hz, drops to `low` under 30 ms/frame load, recovers about 4.4 s after load ends. Per-frame thresholds that sit exactly on a refresh interval are a smell.
+
+## 2026-10-27 — A skipped audit is not a passing audit
+
+The repository moved to sit directly under `development/`, but `audit-consumers.mjs` still resolved consumers two levels up from `process.cwd()`, so every check printed `SKIP` and non-strict runs (including CI) exited green without checking anything. The script now resolves from its own location (`scripts/../..`) with a `FORGE_CONSUMERS_ROOT` override. Treat all-SKIP output as a failed verification, and prefer `--strict` locally.
+
+## 2026-09-08 — Resolve sibling consumers from the repository layout (superseded)
+
+Originally `ThreeGameForge` lived under `development/games`; see the 2026-10-27 entry for the current layout-independent resolution.
 
 ## 2026-09-08 — Keep source compatible with native Node TypeScript
 

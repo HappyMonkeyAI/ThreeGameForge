@@ -4,6 +4,7 @@ import { FixedStepRuntime, RuntimeDiagnostics, RuntimeLifecycle } from '../packa
 import { KeyboardInput } from '../packages/input/src/index';
 import { OrbitCameraRig } from '../packages/camera/src/index';
 import { QualityController } from '../packages/renderer/src/index';
+import { SeededRandom } from '../packages/core/src/index';
 
 const app = document.querySelector<HTMLDivElement>('#app');
 if (!app) throw new Error('Application root is missing');
@@ -64,16 +65,32 @@ function resize(): void {
 window.addEventListener('resize', resize);
 resize();
 
+// Simulation state advances in fixed steps; presentation interpolates between the last two.
+type PlaygroundState = { yaw: number; pitch: number; azimuth: number };
+const simulation = { previous: { yaw: 0, pitch: 0, azimuth: 0 }, current: { yaw: 0, pitch: 0, azimuth: 0 } };
+
+function resetSimulation(seed: number): void {
+  const start: PlaygroundState = { yaw: new SeededRandom(seed).next() * Math.PI * 2, pitch: 0, azimuth: 0 };
+  simulation.previous = { ...start };
+  simulation.current = { ...start };
+}
+
 const runtime = new FixedStepRuntime(
   (dt) => {
     const direction = Number(input.isPressed('rotate-right')) - Number(input.isPressed('rotate-left'));
-    forge.rotation.y += dt * (0.8 + direction * 1.6);
-    cameraRig.rotate(direction * dt * 0.8, 0);
-    forge.rotation.x += dt * 0.35;
+    const { current } = simulation;
+    simulation.previous = { ...current };
+    current.yaw += dt * (0.8 + direction * 1.6);
+    current.pitch += dt * 0.35;
+    current.azimuth += direction * dt * 0.8;
   },
-  () => {
+  (alpha, time) => {
+    const { previous, current } = simulation;
+    forge.rotation.y = THREE.MathUtils.lerp(previous.yaw, current.yaw, alpha);
+    forge.rotation.x = THREE.MathUtils.lerp(previous.pitch, current.pitch, alpha);
+    cameraRig.azimuth = THREE.MathUtils.lerp(previous.azimuth, current.azimuth, alpha);
     cameraRig.applyTo(camera);
-    diagnostics.recordFrame(performance.now(), runtime.stats.simulationSteps);
+    diagnostics.recordFrame(time, runtime.stats.simulationSteps);
     renderer.render(scene, camera);
     const frame = diagnostics.snapshot();
     quality.observe(frame.frameDeltaMs);
@@ -91,15 +108,29 @@ const runtime = new FixedStepRuntime(
   },
 );
 
-window.__THREE_GAME_TEST_HOOKS__ = {
-  seed: async (_seed: number) => ({ seed: _seed }),
-  setState: async (state: string) => {
-    if (state !== 'active-play') throw new Error(`Unknown test state: ${state}`);
-    return { state };
-  },
-  setPausedForScreenshot: (paused: boolean) => runtime.setPaused(paused),
-  hideDebugUi: () => { status.hidden = true; },
-};
+// Test hooks drive capture state, so production bundles only expose them on explicit opt-in.
+if (import.meta.env.DEV || import.meta.env.VITE_ENABLE_TEST_HOOKS === 'true') {
+  window.__THREE_GAME_TEST_HOOKS__ = {
+    seed: async (seed: number) => {
+      resetSimulation(seed);
+      return { seed };
+    },
+    setState: async (state: string) => {
+      if (state !== 'active-play') throw new Error(`Unknown test state: ${state}`);
+      return { state };
+    },
+    setPausedForScreenshot: (paused: boolean) => {
+      runtime.setPaused(paused);
+      if (paused) lifecycle.pause();
+      else lifecycle.resume();
+    },
+    hideDebugUi: () => { status.hidden = true; },
+  };
+}
 
 runtime.start();
-window.addEventListener('beforeunload', () => input.dispose());
+window.addEventListener('beforeunload', () => {
+  runtime.stop();
+  lifecycle.stop();
+  input.dispose();
+});

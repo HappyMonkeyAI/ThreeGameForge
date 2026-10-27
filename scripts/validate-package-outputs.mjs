@@ -1,4 +1,4 @@
-import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
@@ -10,8 +10,7 @@ const publishRoot = resolve(root, 'build/publish');
 await rm(publishRoot, { recursive: true, force: true });
 await mkdir(publishRoot, { recursive: true });
 
-const packageNames = (await import('node:fs/promises')).readdir(sourcePackages, { withFileTypes: true });
-for (const entry of await packageNames) {
+for (const entry of await readdir(sourcePackages, { withFileTypes: true })) {
   if (!entry.isDirectory()) continue;
   const sourceDir = join(sourcePackages, entry.name);
   const manifestPath = join(sourceDir, 'package.json');
@@ -30,9 +29,6 @@ for (const entry of await packageNames) {
   outputManifest.types = './index.d.ts';
   outputManifest.exports = { '.': { types: './index.d.ts', import: './index.js' } };
   outputManifest.files = ['*.js', '*.d.ts', '*.map'];
-  if (outputManifest.dependencies) {
-    outputManifest.dependencies = { ...outputManifest.dependencies };
-  }
   await writeFile(join(outputDir, 'package.json'), `${JSON.stringify(outputManifest, null, 2)}\n`);
 
   const packedManifest = JSON.parse(await readFile(join(outputDir, 'package.json'), 'utf8'));

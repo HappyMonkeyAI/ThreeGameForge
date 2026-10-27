@@ -34,10 +34,26 @@ export class EventBus<Events extends Record<string, unknown>> {
     const listeners = this.handlers.get(event) ?? new Set<EventHandler<unknown>>();
     listeners.add(handler as EventHandler<unknown>);
     this.handlers.set(event, listeners);
-    return () => listeners.delete(handler as EventHandler<unknown>);
+    return () => {
+      listeners.delete(handler as EventHandler<unknown>);
+      if (listeners.size === 0 && this.handlers.get(event) === listeners) this.handlers.delete(event);
+    };
   }
 
+  /** Calls every handler even if some throw; failures are rethrown together afterwards. */
   emit<Key extends keyof Events>(event: Key, payload: Events[Key]): void {
-    for (const handler of this.handlers.get(event) ?? []) handler(payload);
+    const listeners = this.handlers.get(event);
+    if (!listeners) return;
+    const errors: unknown[] = [];
+    // Snapshot so handlers subscribed during this emit start with the next one.
+    for (const handler of [...listeners]) {
+      try {
+        handler(payload);
+      } catch (error) {
+        errors.push(error);
+      }
+    }
+    if (errors.length === 1) throw errors[0];
+    if (errors.length > 1) throw new AggregateError(errors, `${errors.length} handlers failed for ${String(event)}`);
   }
 }

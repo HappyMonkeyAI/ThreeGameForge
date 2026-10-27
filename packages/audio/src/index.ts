@@ -17,7 +17,11 @@ export class AudioBus {
     this.volumes.set(bus, Math.min(Math.max(volume, 0), 1));
   }
 
-  volume(bus: AudioBusName): number { return this.muted.has(bus) ? 0 : (this.volumes.get(bus) ?? 1) * this.volume('master'); }
+  volume(bus: AudioBusName): number {
+    if (this.muted.has(bus) || this.muted.has('master')) return 0;
+    const own = this.volumes.get(bus) ?? 1;
+    return bus === 'master' ? own : own * (this.volumes.get('master') ?? 1);
+  }
   setMuted(bus: AudioBusName, muted: boolean): void { muted ? this.muted.add(bus) : this.muted.delete(bus); }
   isMuted(bus: AudioBusName): boolean { return this.muted.has(bus); }
 
