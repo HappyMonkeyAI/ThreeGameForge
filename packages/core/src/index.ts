@@ -1,18 +1,52 @@
+/**
+ * Deterministic sfc32 generator (128-bit state). Replaced a 32-bit LCG in 0.2.0, whose
+ * low bits cycled with short periods; the same seed now yields a different sequence.
+ */
 export class SeededRandom {
-  private state: number;
+  private a: number;
+  private b: number;
+  private c: number;
+  private d: number;
 
   constructor(seed: number | string) {
-    this.state = typeof seed === 'number' ? seed >>> 0 : SeededRandom.hash(seed);
+    // Expand the 32-bit seed into four well-mixed state words with splitmix32.
+    let mix = typeof seed === 'number' ? seed >>> 0 : SeededRandom.hash(seed);
+    const splitmix = (): number => {
+      mix = (mix + 0x9e3779b9) >>> 0;
+      let z = mix;
+      z = Math.imul(z ^ (z >>> 16), 0x85ebca6b);
+      z = Math.imul(z ^ (z >>> 13), 0xc2b2ae35);
+      return (z ^ (z >>> 16)) >>> 0;
+    };
+    this.a = splitmix();
+    this.b = splitmix();
+    this.c = splitmix();
+    this.d = splitmix();
+    for (let round = 0; round < 12; round += 1) this.nextUint32();
   }
 
+  /** Uniform float in [0, 1). */
   next(): number {
-    this.state = (this.state * 1664525 + 1013904223) >>> 0;
-    return this.state / 0x100000000;
+    return this.nextUint32() / 0x100000000;
   }
 
+  /** Uniform integer in [min, max], both inclusive. */
   integer(min: number, max: number): number {
-    if (max < min) throw new Error('Random maximum must be >= minimum');
+    if (!Number.isInteger(min) || !Number.isInteger(max)) throw new RangeError('Random bounds must be integers');
+    if (max < min) throw new RangeError('Random maximum must be >= minimum');
     return Math.floor(this.next() * (max - min + 1)) + min;
+  }
+
+  // Reference sfc32 step (Chris Doty-Humphrey, PractRand), kept in 32-bit unsigned arithmetic.
+  private nextUint32(): number {
+    let t = (this.a + this.b) >>> 0;
+    this.a = (this.b ^ (this.b >>> 9)) >>> 0;
+    this.b = (this.c + (this.c << 3)) >>> 0;
+    this.c = ((this.c << 21) | (this.c >>> 11)) >>> 0;
+    this.d = (this.d + 1) >>> 0;
+    t = (t + this.d) >>> 0;
+    this.c = (this.c + t) >>> 0;
+    return t;
   }
 
   private static hash(value: string): number {
