@@ -252,6 +252,27 @@ test('PredictionClient rejects reused sequences and ignores stale snapshots', ()
   assert.equal(client.predictedState, 5);
 });
 
+test('PredictionClient applies same-tick acknowledgements but never an older tick', () => {
+  const client = new PredictionClient(0, {
+    clone: (state) => state,
+    apply: (state, command) => state + Number(command.payload),
+  });
+  client.queue({ sequence: 1, type: 'move', payload: 1 });
+  client.queue({ sequence: 2, type: 'move', payload: 1 });
+  client.queue({ sequence: 3, type: 'move', payload: 1 });
+  assert.equal(client.reconcile({ tick: 10, state: 1 }, 1).state, 3);
+  const sameTick = client.reconcile({ tick: 10, state: 2 }, 2);
+  assert.equal(sameTick.applied, true, 'same tick with a newer acknowledgement is current');
+  assert.equal(sameTick.state, 3);
+  assert.equal(client.pendingCount(), 1);
+  // An older tick must be dropped even if its acknowledgement advanced; accepting it would
+  // rebase prediction on superseded authoritative state.
+  const olderTick = client.reconcile({ tick: 9, state: -100 }, 3);
+  assert.equal(olderTick.applied, false);
+  assert.equal(olderTick.state, 3);
+  assert.equal(client.pendingCount(), 1);
+});
+
 test('AdapterRegistry keeps consumer game rules behind an explicit boundary', () => {
   const registry = new AdapterRegistry<number>();
   registry.register({ id: 'fixture', initialState: 0, update: (state, dt) => state + dt });

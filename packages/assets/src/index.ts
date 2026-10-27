@@ -52,6 +52,11 @@ export class AssetRegistry<T> {
     return pending;
   }
 
+  /**
+   * Disposes the asset and permanently retires its id: later `loadAsset(id)` calls throw.
+   * This one-way release keeps disposed GPU resources from being handed out again;
+   * register a new manifest id (or use a new registry) to load the same source afresh.
+   */
   async release(id: string): Promise<void> {
     if (this.disposed.has(id)) return;
     // Claim the release before awaiting so concurrent callers cannot dispose twice.
